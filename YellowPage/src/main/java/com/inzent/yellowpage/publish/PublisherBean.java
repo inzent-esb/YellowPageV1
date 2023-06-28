@@ -1,7 +1,9 @@
 package com.inzent.yellowpage.publish ;
 
+import java.io.ByteArrayInputStream ;
 import java.io.ByteArrayOutputStream ;
 import java.io.IOException ;
+import java.io.StringWriter ;
 import java.sql.Timestamp ;
 import java.util.Objects ;
 
@@ -18,7 +20,12 @@ import org.apache.hc.core5.http.ContentType ;
 import org.apache.hc.core5.http.HttpEntity ;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler ;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity ;
+import org.dom4j.DocumentException ;
+import org.dom4j.io.OutputFormat ;
+import org.dom4j.io.SAXReader ;
+import org.dom4j.io.XMLWriter ;
 import org.springframework.beans.factory.annotation.Autowired ;
+import org.springframework.http.MediaType ;
 import org.springframework.stereotype.Component ;
 
 import com.inzent.yellowpage.marshaller.PublishingFormat ;
@@ -37,6 +44,24 @@ public class PublisherBean implements Publisher
 
   @Autowired
   protected PublishingFormatMarshallerBean publishFormatMarshallerBean ;
+
+  @Override
+  public String getContextType()
+  {
+    return MediaType.APPLICATION_XML_VALUE ;
+  }
+
+  @Override
+  public String getContextString(PublishLog publishLog) throws IOException, DocumentException
+  {
+    try (StringWriter sw = new StringWriter())
+    {
+      XMLWriter writer = new XMLWriter(sw, OutputFormat.createPrettyPrint()) ;
+      writer.write(SAXReader.createDefault().read(new ByteArrayInputStream(publishLog.getPublishContext()))) ;
+
+      return sw.toString() ;
+    }
+  }
 
   @Override
   public byte[] makeContext(PublishLog publishLog) throws Exception
