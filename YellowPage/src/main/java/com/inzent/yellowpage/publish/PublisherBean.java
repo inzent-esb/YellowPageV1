@@ -116,17 +116,17 @@ public class PublisherBean implements Publisher
 
         // TODO 정상 응답 코드 적용
         if (Objects.equals(publishingFormat.getResultCode(), "0"))
-          publishTarget.setPublishDone('Y') ;
+          publishTarget.setPublishDone(PublishTarget.PUBLISH_DONE_SUCCESS) ;
         else
         {
-          publishTarget.setPublishDone('E') ;
+          publishTarget.setPublishDone(PublishTarget.PUBLISH_DONE_ERROR) ;
           publishTarget.setPublishCode(publishingFormat.getResultCode()) ;
           publishTarget.setPublishResult(publishingFormat.getResultMessage()) ;
         }
       }
       catch (Throwable t)
       {
-        publishTarget.setPublishDone('E') ;
+        publishTarget.setPublishDone(PublishTarget.PUBLISH_DONE_ERROR) ;
         publishTarget.setPublishCode(t.getClass().getName()) ;
         publishTarget.setPublishResult(StringUtils.defaultString(t.getMessage(), "null")) ;
 
@@ -134,7 +134,7 @@ public class PublisherBean implements Publisher
           logger.error(t.getMessage(), t) ;
       }
     else
-      publishTarget.setPublishDone('S') ;
+      publishTarget.setPublishDone(PublishTarget.PUBLISH_DONE_SKIP) ;
   }
 
   @Override
@@ -179,17 +179,17 @@ public class PublisherBean implements Publisher
 
         // TODO 정상 응답 코드 적용
         if (Objects.equals(publishingFormat.getResultCode(), "0"))
-          publishTarget.setPublishDone('Y') ;
+          publishTarget.setPublishDone(PublishTarget.PUBLISH_DONE_SUCCESS) ;
         else
         {
-          publishTarget.setPublishDone('E') ;
+          publishTarget.setPublishDone(PublishTarget.PUBLISH_DONE_ERROR) ;
           publishTarget.setPublishCode(publishingFormat.getResultCode()) ;
           publishTarget.setPublishResult(publishingFormat.getResultMessage()) ;
         }
       }
       catch (Throwable t)
       {
-        publishTarget.setPublishDone('E') ;
+        publishTarget.setPublishDone(PublishTarget.PUBLISH_DONE_ERROR) ;
         publishTarget.setPublishCode(t.getClass().getName()) ;
         publishTarget.setPublishResult(StringUtils.defaultString(t.getMessage(), "null")) ;
 
@@ -197,7 +197,7 @@ public class PublisherBean implements Publisher
           logger.error(t.getMessage(), t) ;
       }
     else
-      publishTarget.setPublishDone('S') ;
+      publishTarget.setPublishDone(PublishTarget.PUBLISH_DONE_SKIP) ;
   }
 
   protected PublishingFormat executeHttp(HttpUriRequestBase request, HttpClientResponseHandler<PublishingFormat> responseHandler) throws IOException

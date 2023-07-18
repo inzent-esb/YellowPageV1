@@ -775,6 +775,9 @@ body{scrollbar-3dLight-Color: #efefef; scrollbar-arrow-color: #f0f1f6; scrollbar
 	background-color: #f5f6fb;
 }
 
+.tui-grid-cell.red, .tui-grid-row-hover > .tui-grid-cell.red {
+	background-color: #f8e0e0;
+}
 
 .calendar-time:before{content : ''}
 
@@ -1112,4 +1115,12 @@ span.ellipsis {
 	width: 100%; 
 	height: 100%; 
 	border: none;
+}
+
+.tui-first, .tui-last {
+	display: none !important; 
+} 
+
+.tui-prev {
+	border: 1px solid #ddd !important;
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +9,8 @@
 </head>
 <body>
 	<div id="system" data-ready>
+		<sec:authorize var="hasStatisticsViewer" access="hasRole('StatisticsViewer')"></sec:authorize>
+			
 		<%@ include file="/WEB-INF/html/layout/component/component_search.jsp"%>
 		
 		<%@ include file="/WEB-INF/html/layout/component/component_list.jsp"%>
@@ -43,14 +46,8 @@
 		</ul>
 	</div>
 	<script>
-		document.querySelector('#system').addEventListener('privilege', function(evt) {
-			this.setAttribute('viewer', evt.detail.viewer);
-			this.setAttribute('editor', evt.detail.editor);
-		});
-		
 		document.querySelector('#system').addEventListener('ready', function(evt) {
-			var viewer = 'true' == this.getAttribute('viewer');
-			var editor = 'true' == this.getAttribute('editor');
+			var viewer = 'true' == '${hasStatisticsViewer}';
 			
 			var createPageObj = getCreatePageObj();
 			

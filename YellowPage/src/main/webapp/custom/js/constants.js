@@ -20,15 +20,28 @@ var constants = {
 	isUseTheme: true,
 	
 	grid : {
-		// only server type
-		pageOptions: {
-			notice: {
-				limit: 100,
-				ascending: false
-			},
-			default: {
-				limit: 100,
-				ascending: false			
+        gridOptionFunc: function(gridOptions, isModal) {
+        	//var url = gridOptions.url? gridOptions.url : gridOptions.searchUrl;
+			
+			/*
+			if ('/api/entity/notice/search' === url) {
+				gridOptions.options.columns[0].sortable = true;
+			}
+			*/
+			
+			return gridOptions;
+		},
+		pageOptionFunc: function(searchUrl) {
+			var limit = 100;
+			var ascending = true;
+			
+			if ('/api/entity/metaHistory/search' === searchUrl || '/api/entity/notice/search' === searchUrl || '/api/entity/publishLog/search' === searchUrl) {
+				ascending = false;
+			}
+
+			return {
+				limit: limit,
+				ascending: ascending
 			}
 		},
 		maxListCount: {
@@ -42,9 +55,10 @@ var constants = {
 		},
 	},
 	
-	// 서비스 단독 배포
-	isPublishService: false,
-	
 	// 명세서 기능
 	isSpecification: true,
+	
+	isDetailExpand: false,
+	
+	ifResMapSourceSvcResOnly: false
 };

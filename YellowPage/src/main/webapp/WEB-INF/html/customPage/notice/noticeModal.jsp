@@ -32,7 +32,6 @@
 				searchInitBtn: true,
 				totalCnt: true,
 			    currentCnt: true,
-			    importDataBtn: true
 			});
 			
 			createPageObj.mainConstructor();
@@ -55,11 +54,6 @@
 			            	vmList.totalCnt = info.totalCnt;
 			            });
 		            },
-		            importData: function() {
-			        	vmList.makeGridObj.importData(this.object, function(info) {
-			        		vmList.currentCnt = info.currentCnt;
-			        	});			        	
-			        },
 		            initSearchArea: function() {
 	                	this.object.pageSize = '10';
 	            		this.object.noticeTitle = null;		

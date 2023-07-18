@@ -42,8 +42,7 @@
 			<a id="updateReadyBtn" 	href="javascript:void(0);" class="btn btn-m" 		      				v-on:click="updateReady" style="display: none;"><fmt:message>label.retry</fmt:message></a>
 			<a id="updateCancelBtn"	href="javascript:void(0);" class="btn btn-m" 		      				v-on:click="updateCancel" style="display: none;"><fmt:message>label.cancel</fmt:message></a>
 			<a id="searchInitBtn" 	href="javascript:void(0);" class="btn btn-m" 		      				v-on:click="initSearchArea" style="display: none;"><i class="icon-reset"></i><span class="hide"><fmt:message>label.initialize</fmt:message></span></a>
-			<a id="addBtn"		    href="javascript:void(0);" class="btn btn-m btn-primary"  				v-on:click="goSavePanel" style="display: none;"><i class="icon-plus"></i><span class="hide"><fmt:message>label.insert</fmt:message></span></a>
-			<a id="importDataBtn"   href="javascript:void(0);" class="btn btn-m"						    v-on:click="importData" style="display: none;" v-if="null !== currentCnt && null !== totalCnt && currentCnt !== totalCnt"><i class="icon-list"></i><span class="hide"><fmt:message>label.importData</fmt:message></span></a>			
+			<a id="addBtn"		    href="javascript:void(0);" class="btn btn-m btn-primary"  				v-on:click="goSavePanel" style="display: none;"><i class="icon-plus"></i><span class="hide"><fmt:message>label.insert</fmt:message></span></a>			
 		</div>
 	</div>
 
@@ -63,8 +62,13 @@ var listMethodOption = {
         panelOpen('add');
     },
     goNewTab: function () {
+    	var info = validateOpenNewTabUrl(location.href);
+    	
+    	if (!info.isValidate) return false;
+    	
         localStorage.setItem(this.$el.id + '-newTabSearchCondition', JSON.stringify(window.vmSearch.$data));
-        window.open(window.location.href);
+
+        window.open(info.url);
     },
     newTabSearchGrid: function () {
         if (!localStorage.getItem(this.$el.id + '-newTabSearchCondition')) return false;

@@ -18,15 +18,16 @@
 			<props>
 				<prop key="hibernate.dialect">#{systemProperties['yellowPage.dialect']}</prop>
 				<prop key="hibernate.show_sql">false</prop>
-				<prop key="hibernate.format_sql">true</prop>				
+				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.cache.use_second_level_cache">false</prop>
 				<prop key="hibernate.jdbc.batch_size">-1</prop>
 			</props>
 		</property>
 		<property name="packagesToScan">
 			<list>
-				<value>com.inzent.imanager.repository.meta</value>
 				<value>com.inzent.yellowpage.model</value>
+				<value>com.inzent.imanager.repository.meta</value>
+				<value>com.inzent.igate.repository.meta</value>
 			</list>
 		</property>
 	</bean>

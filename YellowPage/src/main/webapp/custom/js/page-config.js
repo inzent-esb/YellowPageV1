@@ -384,7 +384,13 @@ function getCreatePageObj() {
 			}
 		};
 
-		this.panelConstructor = function (isHideResultTab) {			
+		this.panelConstructor = function (isHideResultTab) {
+			if(constants.isDetailExpand) {
+				$('#panel').addClass('expand');
+			} else {
+				$('#panel').removeClass('expand');
+			}
+			
 			// make tab func
 			function basicTabType(tabObj, rowDiv, tabDiv) {
 				tabObj.detailList.forEach(function (detailObj, detailIndex) {
@@ -1739,6 +1745,8 @@ function getMakeGridObj() {
 	
 	function makeGridObj() {
 		this.setConfig = function (options, paramIsModalGrid, formatterData) {
+			options = constants.grid.gridOptionFunc(options, paramIsModalGrid);
+			
 			searchUrl = options.searchUrl;
 			totalCntUrl = options.totalCntUrl;
 			paging = options.paging;
@@ -1760,7 +1768,6 @@ function getMakeGridObj() {
             
             if (paging && paging.isUse) {
 				grid.on('beforePageMove', function(info) {
-					
 					pageNo = Number(info.page);
 					
 					if (isServerPaging) {						
@@ -1770,6 +1777,14 @@ function getMakeGridObj() {
 								totalCnt: numberWithComma(dataList.length),
 							});
 						});
+					} else {
+						if ('server' === paging.side) {
+							if (pageNo > Math.ceil(grid.getData().length / searchObj.pageSize)) {
+								getDataList(function() {
+									paging.setCurrentCnt(grid.getData().length);
+								});
+							}
+						}
 					}
 				});
 
@@ -1863,19 +1878,6 @@ function getMakeGridObj() {
 			}
 		};
 		
-		this.importData = function(obj, callback) {
-			searchObj = JSON.parse(JSON.stringify(obj));
-			searchCallback = callback;
-			
-			getDataList(function() {
-				if(!searchCallback) return;
-				
-				searchCallback({
-					currentCnt: numberWithComma(dataList.length)
-				});
-			});
-		};
-		
 		this.getSearchGrid = function () {
 			return grid;
 		}
@@ -1918,12 +1920,13 @@ function getMakeGridObj() {
 				if ('client' === paging.side) {
 					param.limit = totalCnt;
 				} else if ('server' === paging.side) {
-					if(constants.grid && constants.grid.pageOptions) {
-						var serverOptions = constants.grid.pageOptions[paging.serverOptions ? paging.serverOptions : 'default'];
-						
-						param.limit = serverOptions.limit;
-						param.reverseOrder = serverOptions.ascending;						
-					}
+					var rtnPageOption = constants.grid.pageOptionFunc(searchUrl);
+					
+					var limit = rtnPageOption.limit;
+					var ascending = rtnPageOption.ascending;
+					
+					param.limit = limit;
+					param.reverseOrder = !ascending;
 
 					if (0 < dataList.length) {
 						param.next = dataList[dataList.length - 1];
@@ -1934,7 +1937,7 @@ function getMakeGridObj() {
 
 					param.limit = searchObj.pageSize;
 					param.pageNo = pageNo;
-					param.sortColumnInfo = { nameList : sortColumnNameList, reverseList : sortColumnTypeList }
+					param.sortColumnInfo = { nameList : sortColumnNameList, reverseList : sortColumnTypeList.map(function(columnType) { return !columnType }) }
 
 					if (null === serverPagingDataArr || totalCnt !== serverPagingDataArr.length) {
 						serverPagingDataArr = Array.from({ length: totalCnt }, function() { return {} });
@@ -1951,72 +1954,69 @@ function getMakeGridObj() {
 			}
 			
 			(new HttpReq(searchUrl)).read(param, function(res) {
+				var sortColumnList = getSortColumnList();		
+				var sortColumnNameList = Array.from(sortColumnList.sortColumnNameList);
+				var sortColumnTypeList = Array.from(sortColumnList.sortColumnTypeList);
+					
+				var pageState = null; 
+					
+				var isUse = paging && paging.isUse;
 				
-					var sortColumnList = getSortColumnList();		
-					var sortColumnNameList = Array.from(sortColumnList.sortColumnNameList);
-					var sortColumnTypeList = Array.from(sortColumnList.sortColumnTypeList);
+				if (isUse) {
+					pageState = {
+						page: pageNo,
+						perPage: Number(searchObj.pageSize)
+					};
+				}
 					
-					var pageState = null; 
-					
-					var isUse = paging && paging.isUse;
-					
-					if (isUse) {
-						pageState = {
-							page: pageNo,
-							perPage: Number(searchObj.pageSize)
-						};
-					}
-					
-					if (isUse && isServerPaging) {
-						//serverPaging
-						pageState.totalCount = totalCnt;
+				if (isUse && isServerPaging) {
+					//serverPaging
+					pageState.totalCount = totalCnt;
 						
-						var startRowIdx = (pageNo - 1) * Number(searchObj.pageSize);
+					var startRowIdx = (pageNo - 1) * Number(searchObj.pageSize);
 						
-						res.object.forEach(function(info, idx) {
-							serverPagingDataArr[startRowIdx + idx] = parseFlattenObj(info);
-						});
+					res.object.forEach(function(info, idx) {
+						serverPagingDataArr[startRowIdx + idx] = parseFlattenObj(info);
+					});
 						
-						dataList = serverPagingDataArr.slice();
+					dataList = serverPagingDataArr.slice();
 						
-						if(0 < sortColumnNameList.length) {
-							sortColumnNameList.forEach(function(sortColumnName, idx) {
-								grid.resetData(serverPagingDataArr, {
-									pageState: pageState,
-									sortState: { columnName: sortColumnName, ascending: sortColumnTypeList[idx], multiple: true }
-								});
-							});
-						} else {
-							grid.resetData(serverPagingDataArr, { pageState: pageState });
-						}
-					} else {
-						// isUse가 false일 때
-						// client, server
-						dataList = dataList.concat(res.object.map(function(info) { 
-							return parseFlattenObj(info);
-						}));
-						
-						if (isUse) pageState.totalCount = dataList.length;
-						
-						var resetDataList = $.extend(true, {}, dataList);
-						
-						grid.resetData(dataList, { pageState: pageState });
-						
+					if(0 < sortColumnNameList.length) {
 						sortColumnNameList.forEach(function(sortColumnName, idx) {
-							grid.sort(sortColumnName, sortColumnTypeList[idx], true);
+							grid.resetData(serverPagingDataArr, {
+								pageState: pageState,
+								sortState: { columnName: sortColumnName, ascending: sortColumnTypeList[idx], multiple: true }
+							});
 						});
-					}
-					
-					if (isModalGrid) {
-						grid.refreshLayout();	
 					} else {
-						window.resizeFunc();	
+						grid.resetData(serverPagingDataArr, { pageState: pageState });
 					}
+				} else {
+					// isUse가 false일 때
+					// client, server
+					dataList = dataList.concat(res.object.map(function(info) { 
+						return parseFlattenObj(info);
+					}));
+						
+					if (isUse) pageState.totalCount = 'server' === paging.side? totalCnt : dataList.length;
+						
+					var resetDataList = $.extend(true, {}, dataList);
+						
+					grid.resetData(dataList, { pageState: pageState });
+						
+					sortColumnNameList.forEach(function(sortColumnName, idx) {
+						grid.sort(sortColumnName, sortColumnTypeList[idx], true);
+					});
+				}
 					
-					if(callback) callback(res);
-				},
-				true
-			);
+				if (isModalGrid) {
+					grid.refreshLayout();	
+				} else {
+					window.resizeFunc();	
+				}
+				
+				if(callback) callback(res);
+			}, true);
 		}
 		
 		function getSortColumnList() {
@@ -2027,7 +2027,7 @@ function getMakeGridObj() {
 
 			var isDefaultSort = 'sortKey' === column.columnName;
 
-			if (isDefaultSort && null !== sortColumnName) {
+			if (isDefaultSort && ('undefined' === typeof gridOptions.sortColumn || null !== sortColumnName)) {
 				return {
 					sortColumnNameList: sortColumnNameList,
 					sortColumnTypeList: sortColumnTypeList
@@ -2037,11 +2037,7 @@ function getMakeGridObj() {
 			if (0 < gridOptions.columns.filter(function(column) { return column.sortable }).length) {
 				var columnInfo = gridOptions.columns.filter(function(columnInfo) {
 					if (isDefaultSort) {
-						if (gridOptions.sortColumn) {
-							return gridOptions.sortColumn === columnInfo.name;
-						} else {
-							return columnInfo.sortable;
-						}
+						return gridOptions.sortColumn === columnInfo.name;
 					} else {
 						return columnInfo.name === column.columnName;
 					}					

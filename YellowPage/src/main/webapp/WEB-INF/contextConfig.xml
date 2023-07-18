@@ -48,6 +48,10 @@
 		<property name="metaEntityRepository" ref="menuBookmarkRepository" />
 	</bean>
 
+	<bean id="messageService" class="com.inzent.imanager.service.MetaEntityService">
+		<property name="metaEntityRepository" ref="messageRepository" />
+	</bean>
+
 	<bean id="metaHistoryService" class="com.inzent.imanager.service.MetaEntityService">
 		<property name="metaEntityRepository" ref="metaHistoryRepository" />
 	</bean>

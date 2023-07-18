@@ -21,10 +21,10 @@
 		<task:scheduled ref="metaHistoryDeleteTask" method="run" cron="0 30 * * * ?" />
 		<task:scheduled ref="publishApproveTask" method="run" cron="0/2 * * * * ?" />
 		<task:scheduled ref="publishingTask" method="run" cron="1/2 * * * * ?" />
-		
+
 		<task:scheduled ref="statsServerTask" method="run" cron="0/3 * * * * ?" />
 		<task:scheduled ref="statsSystemTask" method="run" cron="1/3 * * * * ?" />
-		<task:scheduled ref="statsUserTask" method="run" cron="2/3 * * * * ?" />		
+		<task:scheduled ref="statsUserTask" method="run" cron="2/3 * * * * ?" />
 		<!--
 		<task:scheduled ref="statsServerTask" method="run" cron="0 0/10 * * * ?" />
 		<task:scheduled ref="statsSystemTask" method="run" cron="0 3/10 * * * ?" />
@@ -42,6 +42,28 @@
 		</property>
 	</bean>
 
+	<bean id="corsSource" class="org.springframework.web.cors.UrlBasedCorsConfigurationSource">
+		<property name="corsConfigurations">
+			<map>
+				<entry key="/**">
+					<bean class="org.springframework.web.cors.CorsConfiguration">
+						<property name="allowCredentials" value="true" />
+						<property name="allowedHeaders" value="*" />
+						<property name="allowedMethods" value="*" />
+						<property name="allowedOrigins" value="http://localhost:1112" />
+						<property name="exposedHeaders">
+							<list>
+								<value>X-iManager-Access</value>
+								<value>X-iManager-Refresh</value>
+							</list>
+						</property>
+						<property name="maxAge" value="86400" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
 	<security:http auto-config="false" entry-point-ref="accessDeniedHandler" security-context-repository-ref="tokenRepository">
 		<security:intercept-url pattern="/api/auth/token" access="permitAll()" />
 		<security:intercept-url pattern="/api/entity/fieldMeta/**" access="hasRole('ROLE_RecordViewer')" />
@@ -49,6 +71,7 @@
 		<security:intercept-url pattern="/api/entity/interfaceClass/search" access="isAuthenticated()"/>
 		<security:intercept-url pattern="/api/entity/interfaceClass/**" access="hasRole('ROLE_PropertyViewer')" />		
 		<security:intercept-url pattern="/api/entity/menu/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/api/entity/message/**" access="hasRole('ROLE_MessageViewer')" />
 		<security:intercept-url pattern="/api/entity/metaHistory/**" access="hasRole('ROLE_MetaHistoryViewer')" />
 		<security:intercept-url pattern="/api/entity/notice/**" access="isAuthenticated()" />
 		<security:intercept-url pattern="/api/entity/privilege/search" access="isAuthenticated()" />
@@ -81,5 +104,6 @@
 
 		<security:access-denied-handler ref="accessDeniedHandler" />
 		<security:csrf disabled="true" />
+		<security:cors configuration-source-ref="corsSource"/>
 	</security:http>
 </beans>

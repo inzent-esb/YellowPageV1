@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +9,8 @@
 </head>
 <body>
 	<div id="notice" data-ready>
+		<sec:authorize var="hasNoticeEditor" access="hasRole('NoticeEditor')"></sec:authorize>
+			
 		<%@ include file="/WEB-INF/html/layout/component/component_search.jsp"%>
 		
 		<%@ include file="/WEB-INF/html/layout/component/component_list.jsp"%>
@@ -15,14 +18,9 @@
 		<%@ include file="/WEB-INF/html/layout/component/component_detail.jsp"%>
 	</div>
 	<script>
-		document.querySelector('#notice').addEventListener('privilege', function(evt) {
-			this.setAttribute('viewer', evt.detail.viewer);
-			this.setAttribute('editor', evt.detail.editor);
-		});
-		
 		document.querySelector('#notice').addEventListener('ready', function(evt) {
-			var viewer = 'true' == this.getAttribute('viewer');
-			var editor = 'true' == this.getAttribute('editor');
+			var viewer = true;
+			var editor = 'true' == '${hasNoticeEditor}';
 			
 			var createPageObj = getCreatePageObj();
 			
@@ -40,7 +38,6 @@
 				searchInitBtn: viewer,
 				totalCnt: viewer,
 				currentCnt: viewer,
-				importDataBtn: viewer,
 				addBtn: editor,
 			});
 			
@@ -123,11 +120,6 @@
 			            	vmList.totalCnt = info.totalCnt;
 			            });
 			        },
-			        importData: function() {
-			        	vmList.makeGridObj.importData(this.object, function(info) {
-			        		vmList.currentCnt = info.currentCnt;
-			        	});			        	
-			        },
 		            initSearchArea: function(searchCondition) {
 		            	if(searchCondition) {
 		            		for(var key in searchCondition) {
@@ -156,20 +148,20 @@
 		        	initSearchArea: function() {
 		        		window.vmSearch.initSearchArea();
 		        	},
-			        importData: function() {
-			        	window.vmSearch.importData();
-			        }
 		        }),
 		        mounted: function() {
 		        	this.makeGridObj = getMakeGridObj();
 		        	
 		        	this.makeGridObj.setConfig({
 		        		el: document.querySelector('#' + createPageObj.getElementId('ImngSearchGrid')),
-			            searchUrl: '/api/entity/notice/page',
+			            searchUrl: '/api/entity/notice/search',
 			            totalCntUrl: '/api/entity/notice/count',
 			    		paging: {
 			    			isUse: true,
-			    			side: "serverPaging"
+			    			side: "server",
+			    			setCurrentCnt: function(currentCnt) {
+			    				this.currentCnt = currentCnt
+			    			}.bind(this)			    			
 			    		},
 		              	columns : [
 		              		{
@@ -261,7 +253,21 @@
 			new Vue({
 				el: '#panel-header',
 				methods : $.extend(true, {}, panelMethodOption)
-			});			
+			});		
+			
+			new Vue({
+			    el: '#panel-footer',
+			    methods: $.extend(true, {}, panelMethodOption, {
+			    	saveInfo: function() {
+			    		SaveImngObj.insert('<fmt:message>msg.alert.insert</fmt:message>', function(result) {			    			
+			    			if(!result.object) return;
+			    			
+			    			window.vmMain.object.pk.createTimestamp = result.object.pk.createTimestamp;
+			    			window.vmMain.object.pk.noticeId = result.object.pk.noticeId;
+			    		});
+			    	}
+			    })
+			});
 			
 			this.addEventListener('destroy', function(evt) {
 				$(".daterangepicker").remove();

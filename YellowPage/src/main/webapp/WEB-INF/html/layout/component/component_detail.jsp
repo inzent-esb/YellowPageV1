@@ -10,10 +10,10 @@
                 <a href="javascript:void(0);" class="btn btn-icon updateGroup backBtn" title="<fmt:message>label.goBack</fmt:message>" v-on:click="goPreviousPanel"><i class="icon-left"></i></a>                
 				<h2 class="sub-bar-tit"></h2>
 				<div class="ml-auto">
-					<button type="button" class="btn-change-layout-horizon btn-icon" v-on:click="changeLayout('vertical')" title="<fmt:message>common.detail.horizontal.view</fmt:message>">
+					<button type="button" class="btn-change-layout-horizon btn-icon" v-on:click="changeLayout('vertical')" title="<fmt:message>label.detail.horizontal.view</fmt:message>">
 						<img src="${prefixFileUrl}/img/horizontal.svg" class="center-block" />
 					</button>
-					<button type="button" class="btn-change-layout-vertical btn-icon" v-on:click="changeLayout('horizon')" title="<fmt:message>common.detail.vertical.view</fmt:message>">
+					<button type="button" class="btn-change-layout-vertical btn-icon" v-on:click="changeLayout('horizon')" title="<fmt:message>label.detail.vertical.view</fmt:message>">
 						<img src="${prefixFileUrl}/img/vertical.svg" class="center-block" />
 					</button>				
 					<button type="button" class="btn-icon" v-on:click="togglePanel" data-toggle="toggle" data-target="#panel" data-class="expand"><i class="icon-expand"></i></button>
