@@ -58,7 +58,7 @@ var constants = {
 	// 명세서 기능
 	isSpecification: true,
 	
-	isDetailExpand: false,
+	isDetailExpand: true,
 	
-	ifResMapSourceSvcResOnly: false
+	ifResMapSourceSvcResOnly: true
 };
