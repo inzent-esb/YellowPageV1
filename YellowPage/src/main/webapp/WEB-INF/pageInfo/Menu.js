@@ -122,7 +122,7 @@ const info = {
 				{
 					header: this.$t('label.name'),
 					name: 'menuName',
-					width: '30%'
+					width: '20%'
 				},
 				{
 					header: this.$t('label.menu.webUrl'),
@@ -132,12 +132,12 @@ const info = {
 				{
 					header: this.$t('label.privilege') + ' ' + this.$t('label.id'),
 					name: 'menuPrivilegeId',
-					width: '20%'
+					width: '15%'
 				},
 				{
 					header: this.$t('label.menu.parentMenu'),
 					name: 'parentMenuId',
-					width: '15%'
+					width: '20%'
 				},
 			],
 		},
@@ -284,7 +284,7 @@ const info = {
 								type: 'text',
 								vModel: 'parentMenuId',
 								label: this.$t('label.menu.parentMenu'),
-								regExpType: 'num'
+								regExpType: 'id'
 							},
 						],
 					],

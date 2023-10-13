@@ -22,9 +22,12 @@ function getCreatePageObj() {
 		};
 
 		this.setSearchList = function (pSearchList) {
-			if (!isModal) SearchImngObj.initSearchImngObj();
-
-			searchList = pSearchList;
+			if (!isModal && 0 < pSearchList.length) {
+				SearchImngObj.initSearchImngObj();
+				searchList = constants.search.searchListFunc(getCurrentMenuId(), pSearchList);
+			} else {
+				searchList = pSearchList;
+			}
 		};
 
 		this.setMainButtonList = function (pMainButtonList) {
@@ -32,7 +35,7 @@ function getCreatePageObj() {
 		};
 
 		this.setTabList = function (pTabList) {
-			tabList = pTabList;
+			tabList = constants.detail.tabListFunc(getCurrentMenuId(), pTabList);
 		};
 
 		this.setPanelButtonList = function (pPanelButtonList) {
@@ -1385,18 +1388,14 @@ function getCreatePageObj() {
 			var modalTitle = openModalParam.modalTitle;
 			var callBackFuncName = openModalParam.callBackFuncName;
 
-			var modalSize = '-lg';
-
-			if (openModalParam.modalParam && openModalParam.modalParam.modalSize) {
-				var size = openModalParam.modalParam.modalSize;
-				modalSize = 'small' === size ? '-sm' : 'extraLarge' === size ? '-xl' : '';
-			}
+            var modalWidth = openModalParam.modalWidth? openModalParam.modalWidth : '800px';
+            var modalHeight = openModalParam.modalHeight? openModalParam.modalHeight : '700px';
 
 			var modalHtml = '';
 
 			modalHtml += '<div id="' + viewName + 'ModalSearch"  class="modal fade" tabindex="-1" role="dialog" style="background: none !important;">';
-			modalHtml += '    <div class="modal-dialog modal-dialog-centered modal' + modalSize + ' modal-dialog-scrollable">';
-			modalHtml += '        <div class="modal-content">';
+            modalHtml += '    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: ' + modalWidth + ';">';
+            modalHtml += '        <div class="modal-content" style="height: ' + modalHeight + ';">';
 			modalHtml += '            <div class="modal-header">';
 			modalHtml += '                <h2 class="modal-title">' + modalTitle + '</h2>';
 			modalHtml += '                <button type="button" class="btn-icon" data-dismiss="modal" aria-label="Close"><i class="icon-close"></i></button>';
@@ -1745,8 +1744,10 @@ function getMakeGridObj() {
 	
 	function makeGridObj() {
 		this.setConfig = function (options, paramIsModalGrid, formatterData) {
-			options = constants.grid.gridOptionFunc(options, paramIsModalGrid);
-			
+			if(!paramIsModalGrid) {
+				options = constants.grid.gridOptionFunc(getCurrentMenuId(), options);
+			}
+
 			searchUrl = options.searchUrl;
 			totalCntUrl = options.totalCntUrl;
 			paging = options.paging;
@@ -1790,7 +1791,7 @@ function getMakeGridObj() {
 
 				grid.on('afterPageMove', function() {
 					if (isModalGrid) {
-						grid.refreshLayout();	
+						resizeModalSearchGrid(grid);	
 					} else {
 						window.resizeFunc();	
 					}
@@ -1887,7 +1888,7 @@ function getMakeGridObj() {
 				
                 var selectedMenuPathIdList = JSON.parse(sessionStorage.getItem('selectedMenuPathIdList'));
 				var menuId = selectedMenuPathIdList[selectedMenuPathIdList.length - 1];
-				var maxListCount = constants.grid.maxListCount[menuId];
+				var maxListCount = constants.grid.maxListCount[menuId.replace('_bookmark', '')];
 				
 				if(maxListCount && Number(res.object) > maxListCount) {
 					window._alert({
@@ -1920,7 +1921,7 @@ function getMakeGridObj() {
 				if ('client' === paging.side) {
 					param.limit = totalCnt;
 				} else if ('server' === paging.side) {
-					var rtnPageOption = constants.grid.pageOptionFunc(searchUrl);
+					var rtnPageOption = constants.grid.pageOptionFunc(getCurrentMenuId());
 					
 					var limit = rtnPageOption.limit;
 					var ascending = rtnPageOption.ascending;
@@ -2010,7 +2011,7 @@ function getMakeGridObj() {
 				}
 					
 				if (isModalGrid) {
-					grid.refreshLayout();	
+                    resizeModalSearchGrid(grid);
 				} else {
 					window.resizeFunc();	
 				}

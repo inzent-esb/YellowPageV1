@@ -15,16 +15,29 @@ var constants = {
 		default: { maxLength: 100, regExp: '' }
 	},
 	logInTime: 300000,
+	
+	motionDetectTime: 1000,
+	autoLogoutTime: 1200000,
+	
 	//escape: 27, space: 32
 	modalCloseKeyCode: [27, 32],
 	isUseTheme: true,
 	
-	grid : {
-        gridOptionFunc: function(gridOptions, isModal) {
-        	//var url = gridOptions.url? gridOptions.url : gridOptions.searchUrl;
-			
+	search: {
+		searchListFunc: function(menuId, searchList) {
 			/*
-			if ('/api/entity/notice/search' === url) {
+			if ('301000' === menuId) {
+				searchList[0].label = 'TEST';
+			}*/
+						
+			return searchList;
+		}
+	},
+	
+	grid : {
+        gridOptionFunc: function(menuId, gridOptions) {
+			/*
+			if ('301000' === url) {
 				gridOptions.options.columns[0].sortable = true;
 			}
 			*/
@@ -35,7 +48,8 @@ var constants = {
 			var limit = 100;
 			var ascending = true;
 			
-			if ('/api/entity/metaHistory/search' === searchUrl || '/api/entity/notice/search' === searchUrl || '/api/entity/publishLog/search' === searchUrl) {
+			// 수정내역, 공지사항, 배포 로그
+			if ('302000' === searchUrl || '301000' === searchUrl || '105000' === searchUrl) {
 				ascending = false;
 			}
 
@@ -50,8 +64,18 @@ var constants = {
 	},
 	
 	detail: {
-		105000: {
-			selectedInfoTitleKey: ['pk.publishDateTime', 'pk.publishId']
+		tabListFunc: function(menuId, tabList) {
+			/*
+			if ('301000' === menuId) {
+				var basicInfo = tabList[0].content;
+				
+				basicInfo[0][0][0].label = window.$t('label.notice');
+			}*/
+			
+			return tabList;
+		},
+		selectedInfoTitleKey: {
+			105000: ['pk.publishDateTime', 'pk.publishId']
 		},
 	},
 	

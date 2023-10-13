@@ -103,6 +103,13 @@ function clearStorage(storage, continueFunc) {
 	}
 }
 
+function getCurrentMenuId() {
+	var selectedMenuPathIdList = JSON.parse(sessionStorage.getItem('selectedMenuPathIdList'));
+	var selectMenu = selectedMenuPathIdList[selectedMenuPathIdList.length - 1].split('_')[0];
+
+	return selectMenu;
+}
+
 function getFileSize(fileSize){
 	var rtn = 0;
 	  
@@ -172,18 +179,39 @@ function makeGridOptions(gridOptions, formatterData) {
 			align: 'center'
 		},
 		columnOptions: {
-			resizable: true
+			resizable: true,
+			minWidth: 1
 		},
 		contextMenu: function() {
 			return [];
 		},
-		scrollX: false,
-		data: []
+		scrollX: true,
+		data: [],
+		usageStatistics: false
 	};
 	
 	options = $.extend(true, options, gridOptions);
+	
+	var columnsExcludeHidden = options.columns.filter(function(column) { return !column.hidden });
+	var widthConfigType = null;
+	
+	if (0 < columnsExcludeHidden.length) {
+		if (columnsExcludeHidden.length === columnsExcludeHidden.filter(function(column) { return column.width && String(column.width).endsWith('%') }).length) {
+			widthConfigType = 'percent';
+		} else if (columnsExcludeHidden.length === columnsExcludeHidden.filter(function(column) { return column.width && 'number' === typeof column.width }).length) {
+			widthConfigType = 'pixel';
+		}
+		
+		if (null === widthConfigType) {
+			widthConfigType = 'percent';
+			
+			columnsExcludeHidden.forEach(function(column) {
+				column.width = (100 / columnsExcludeHidden.length) + '%';
+			});
+		}
+	}
 
-	options.columns.forEach(function(column) {
+	columnsExcludeHidden.forEach(function(column) {
 		if (column.formatter) {
 			var formatterFunc = column.formatter;
 
@@ -198,7 +226,7 @@ function makeGridOptions(gridOptions, formatterData) {
 
 		if (column.width && -1 < String(column.width).indexOf('%')) {
 			if (!column.copyOptions) column.copyOptions = {};
-
+			
 			column.copyOptions.widthRatio = column.width.replace('%', '');
 
 			delete column.width;
@@ -226,7 +254,76 @@ function makeGridOptions(gridOptions, formatterData) {
 
 			element.setAttribute('title', value);
 		});
+		
+        var agent = navigator.userAgent.toLowerCase();
+        
+        if (!(navigator.appName == 'Netscape' && -1 != agent.indexOf('trident')) || -1 != agent.indexOf('msie')) {
+            evt.instance.on('dblclick', function(dblClickEvt) {
+                var span = document.createElement('span');
+                span.style.fontSize = '13px';
+                span.style.padding = '4px 5px';
+                span.style.opacity = '0';
+                span.style.position = 'absolute';
+                document.body.appendChild(span);
+                
+                var maxWidth = 0;
 
+                dblClickEvt.instance.el.querySelectorAll('.tui-grid-cell').forEach(function(cell) {
+                    if (cell.classList.contains('tui-grid-cell-header')) return;
+
+                    if (cell.dataset.columnName !== dblClickEvt.nativeEvent.target.dataset.columnName) return;
+                    
+                    span.innerText = cell.innerText;
+
+                    maxWidth = Math.max(maxWidth, span.offsetWidth);
+                });
+                
+                document.body.removeChild(span);
+
+                var columnWidths = dblClickEvt.instance.getColumns().map(function(column) { return column.baseWidth });
+                columnWidths[dblClickEvt.nativeEvent.target.dataset.columnIndex] = maxWidth + 20;
+
+                evt.instance.resetColumnWidths(columnWidths);
+
+                evt.instance.refreshLayout();
+            });            
+        }        
+        
+		if ('percent' == widthConfigType) {
+			var width = null;
+			
+			var containerEl = evt.instance.el.querySelector('.tui-grid-container');
+
+			var resizeObserver = function() {
+				if (!document.body.contains(evt.instance.el)) {
+					cancelAnimationFrame(rafId);
+					return;
+				}
+
+				if (containerEl.style.width && width !== containerEl.style.width) {
+					width = containerEl.style.width;
+
+					var columns = $.extend(true, [], evt.instance.getColumns());
+
+					columns.forEach(function(columnInfo) {
+						if (columnInfo.hidden) return;
+
+						if (!columnInfo.copyOptions) return;
+
+						if (!columnInfo.copyOptions.widthRatio) return;
+						
+						columnInfo.width = (Number(containerEl.style.width.replace('px', '')) - 17 - evt.instance.el.querySelector('.tui-grid-lside-area').offsetWidth) * (columnInfo.copyOptions.widthRatio / 100);
+					});
+
+					evt.instance.setColumns(columns);
+				}
+
+				rafId = requestAnimationFrame(resizeObserver);
+			};
+
+			var rafId = requestAnimationFrame(resizeObserver);
+		}
+		
 		if (onGridMounted) onGridMounted(evt);
 	};
 	
@@ -238,21 +335,9 @@ function makeGridOptions(gridOptions, formatterData) {
 		for (var attributeKey in options) {
 			evt.instance.el.removeAttribute(attributeKey);
 		}
-
-		var resetColumnWidths = [];
-
-		evt.instance.getColumns().forEach(function(columnInfo) {
-			if (!columnInfo.copyOptions) return;
-
-			if (columnInfo.copyOptions.widthRatio) {
-				resetColumnWidths.push(evt.instance.el.offsetWidth * (columnInfo.copyOptions.widthRatio / 100));
-			}
-		});
-
-		if (0 < resetColumnWidths.length) evt.instance.resetColumnWidths(resetColumnWidths);
-
+		
 		evt.instance.refreshLayout();
-
+		
 		if (onGridUpdated) onGridUpdated(evt);
 	};
 
@@ -289,7 +374,6 @@ function parseHierarchyObj(obj) {
 }
 
 function downloadFileFunc(downloadObj) {
-	
 	var errorFunc = function() {
 		window._alert({ type: 'warn', message: failMsg });
 	};
@@ -301,9 +385,9 @@ function downloadFileFunc(downloadObj) {
     	
 	var downloadUrl = downloadObj.url;
 	var downloadParam = downloadObj.param;
-	var fileName = downloadObj.fileName;
+	var fileName = downloadObj.fileName; 
 	
-	if(!downloadUrl || !downloadParam || !fileName) {
+	if(!downloadUrl || !downloadParam) {
 		errorFunc();
 		return;
 	}
@@ -329,9 +413,22 @@ function downloadFileFunc(downloadObj) {
             req.onload = function (event) {
                 window.$stopSpinner();
                 
-                var blob = req.response;
-                var file_name = fileName;
+                var disposition = req.getResponseHeader('Content-Disposition');
+                
+                var reqFileName = null;
 
+				if (disposition && disposition.indexOf('attachment') !== -1) {
+					let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+					let matches = filenameRegex.exec(disposition);
+
+					if (matches != null && matches[1]) reqFileName = matches[1].replace(/['"]/g, '');
+				}
+								
+				var today = moment(new Date()).format('YYYYMMDD_HHmmss');
+	
+                var blob = req.response;
+				var file_name = fileName ? fileName + "_" + today + ".xlsx" : reqFileName ? reqFileName : "Download_list_file_" + today + ".xlsx" ;
+				
                 if (blob.size <= 0) {
                 	errorFunc();
             		return;
@@ -389,8 +486,6 @@ function uploadFileFunc(uploadObj) {
             req.setRequestHeader('X-iManager-Method', 'POST');
             
             req.withCredentials = true;
-           
-            console.log(uploadData)
             
             var formData = new FormData();
 			formData.enctype = 'multipart/form-data';
@@ -400,8 +495,6 @@ function uploadFileFunc(uploadObj) {
 
             req.onload = function (event) {
                 window.$stopSpinner();
-                
-                console.log(callback)
                 
                 if(callback) callback(req);
             };

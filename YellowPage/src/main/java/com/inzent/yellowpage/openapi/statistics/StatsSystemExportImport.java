@@ -46,9 +46,10 @@ public class StatsSystemExportImport implements EntityExportImportBean<StatsSyst
   @Override
   public void exportList(HttpServletRequest request, HttpServletResponse response, StatsSystem entity, List<StatsSystem> list) throws Exception
   {
-    String fileName = "System_" + FastDateFormat.getInstance("yyyy-MM-dd hh:mm").format(new Timestamp(System.currentTimeMillis())) + ".xlsx" ;
+    String fileName = "LogsStatsSystem_" + FastDateFormat.getInstance("yyyyMMdd_hhmmss").format(new Timestamp(System.currentTimeMillis())) + ".xlsx" ;
 
     response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate") ;
+    response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
     response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + URLEncoder.encode(fileName, JsonEncoding.UTF8.getJavaName()).replaceAll("\\+", "%20")) ;
     response.setContentType("application/octet-stream") ;
 

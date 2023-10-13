@@ -43,7 +43,7 @@ const info = {
 				{
 					header: this.$t('label.title'),
 					name: 'noticeTitle',
-					width: '5%',
+					width: '40%',
 				},				
 				{
               		header : this.$t('label.writer'),

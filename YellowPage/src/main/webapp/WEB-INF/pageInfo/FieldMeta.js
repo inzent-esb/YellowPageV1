@@ -111,6 +111,7 @@ const info = {
 				{ id: 'insert', isUse: true },
 				{ id: 'update', isUse: true },
 				{ id: 'delete', isUse: true },
+				{ id: 'reference', isUse: true, className: 'com.inzent.yellowpage.model.FieldMeta' }
 			],
 		},
 		tabList: [
@@ -275,6 +276,39 @@ const info = {
 								height: '110px',
 								regExpType: 'desc',
 							}
+						]
+					]
+				]
+			},
+			{
+				id: 'useInfo',
+				type: 'basic',
+				label: this.$t('label.useInfo'),
+				content: [
+					[
+						[
+							{
+								type: 'text',
+								vModel: 'updateUserId',
+								label: this.$t('label.writer'),
+								readonly: true
+							},
+							{
+								type: 'text',
+								vModel: 'updateTimestamp',
+								label: this.$t('label.created.date'),
+								readonly: true,
+								formatter: function(value) {
+									return value ? value.substring(0, 19) : value;
+								}
+							},
+							{
+								type: 'text',
+								vModel: 'updateVersion',
+								label: 'Version',
+								readonly: true,
+								val: '0'
+							}							
 						]
 					]
 				]

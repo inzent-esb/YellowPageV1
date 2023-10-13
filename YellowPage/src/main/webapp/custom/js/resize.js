@@ -63,6 +63,16 @@ function resizeSearchGrid() {
 	SearchImngObj.searchGrid.setHeight(adjustHeight);
 
 	resizeSearchGridPagination(searchGridEl.attr('id'));
+	
+	setTimeout(function() {
+		var rsideAreaElement = SearchImngObj.searchGrid.el.querySelector('.tui-grid-rside-area');
+		var bodyClientHeight = rsideAreaElement.querySelector('.tui-grid-body-area').clientHeight;
+		var scrollbarYInnerBorderClientHeight = rsideAreaElement.querySelector('.tui-grid-scrollbar-y-inner-border').clientHeight;
+		
+		if (bodyClientHeight !== scrollbarYInnerBorderClientHeight) {
+			rsideAreaElement.querySelector('.tui-grid-scrollbar-y-inner-border').style.height = bodyClientHeight + 'px';
+		}		
+	}, 0);	
 }
 
 function resizeSearchGridPagination(gridAreaId) {
@@ -102,25 +112,47 @@ function resizeSearchGridPagination(gridAreaId) {
 }
 
 function windowResizeModal() {
+	var width = $('#ct').outerWidth(true);
+
 	$('.modal.show').each(function (index, item) {
 		var modalParam = $(item).data('modalParam');
 
 		if (modalParam && 'full' == modalParam.spinnerMode) return true;
 
-		$(item).width(window.innerWidth);
-		$(item).next().width(window.innerWidth);
+		$(item).width(width).css({ left: 'auto', right: '0px' });
+		$(item).next().width(width).css({ left: 'auto', right: '0px' });
 	});
+}
 
-	setTimeout(function () {
-		var width = $('#ct').outerWidth(true);
+function resizeModalSearchGrid(grid) {
+	if (!grid) return;
+	
+	var modalBody = grid.el.closest('.modal-body');
 
-		$('.modal.show').each(function (index, item) {
-			var modalParam = $(item).data('modalParam');
+	if (!modalBody) return;
+	
+	var modalBodyComputedStyle = getComputedStyle(modalBody);
 
-			if (modalParam && 'full' == modalParam.spinnerMode) return true;
+	var modalBodyPaddingLeft = getNumFromStr(modalBodyComputedStyle.getPropertyValue('padding-left'));
+	var modalBodyPaddingRight = getNumFromStr(modalBodyComputedStyle.getPropertyValue('padding-right'));
+	var modalBodyPaddingTop = getNumFromStr(modalBodyComputedStyle.getPropertyValue('padding-top'));
+	var modalBodyPaddingBottom = getNumFromStr(modalBodyComputedStyle.getPropertyValue('padding-bottom'));
 
-			$(item).width(width).css({ left: 'auto', right: '0px' });
-			$(item).next().width(width).css({ left: 'auto', right: '0px' });
-		});
-	}, 350);
+	var adjustWidth = modalBody.clientWidth - modalBodyPaddingLeft - modalBodyPaddingRight;
+
+	grid.setWidth(adjustWidth);
+	
+	var ctHeaderHeight = modalBody.querySelector('.ct-header').offsetHeight;
+	var subBarHeight = modalBody.querySelector('.sub-bar').offsetHeight;
+
+	var pagination = modalBody.querySelector('.tui-grid-pagination');
+	var paginationComputedStyle = getComputedStyle(pagination);
+	var paginationMarginTop = getNumFromStr(paginationComputedStyle.getPropertyValue('margin-top'));
+	var paginationMarginBottom = getNumFromStr(paginationComputedStyle.getPropertyValue('margin-bottom'));
+
+	var paginationHeight = pagination.offsetHeight;
+
+	var adjustHeight = modalBody.clientHeight - modalBodyPaddingTop - modalBodyPaddingBottom - ctHeaderHeight - subBarHeight - paginationHeight - paginationMarginTop - paginationMarginBottom;
+
+	grid.setHeight(adjustHeight);
 }

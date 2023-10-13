@@ -249,6 +249,10 @@ select::-ms-expand{display: none}
 	height: calc(100% - 2.125rem - 2px) !important;
 }
 
+.panel-body .tab-pane.active .propertyTab .form-table-wrap {
+	max-height: none;
+}
+
 .panel-bottom .tab-pane.active .propertyTab .form-table .form-table-head {
 	position: relative;
 }

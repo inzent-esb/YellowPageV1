@@ -125,6 +125,10 @@
 	        	}, true);
 	        }		
 		});	 
+		
+        document.querySelector('#systemModal').addEventListener('resize', function(evt) {
+            resizeModalSearchGrid(vmList.makeGridObj.getSearchGrid());
+        });		
 	});
 	</script>
 </body>

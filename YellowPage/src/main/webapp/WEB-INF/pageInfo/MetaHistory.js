@@ -149,7 +149,12 @@ const info = {
 								type: 'text',
 								vModel: 'entityId',
 								label: this.$t('label.metaHistory.entityId'),
-							},		
+							},
+                            {
+                                type: "text",
+                                vModel: "entityVersion",
+                                label: 'Entity Version',
+                            },							
 							{
 								type: 'text',
 								vModel: 'updateUserId',
