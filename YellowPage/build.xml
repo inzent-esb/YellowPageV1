@@ -31,4 +31,8 @@
 		</javac>
 		<jar destfile="target/${ant.project.name}.war" basedir="target/${ant.project.name}" />
 	</target>
+	
+	<target name="deploy">
+		<copy file="target/${ant.project.name}.war" todir="${deployHome}" />
+	</target>	
 </project>
