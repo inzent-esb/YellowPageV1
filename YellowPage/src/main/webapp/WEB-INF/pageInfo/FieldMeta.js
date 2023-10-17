@@ -58,7 +58,7 @@ const info = {
 				{
 					header: this.$t('label.metaDomain'),
 					name: 'pk.metaDomain',
-					width: '20%'
+					width: '15%'
 				},				
 				{
 					header: this.$t('label.id'),
@@ -68,7 +68,7 @@ const info = {
 				{
 					header: this.$t('label.name'),
 					name: 'fieldName',
-					width: '20%'
+					width: '15%'
 				},
 				{
 					header: this.$t('label.type'),
@@ -97,9 +97,21 @@ const info = {
 		            }
 				},
 				{
+					header: this.$t('label.length'),
+					name: 'fieldLength',
+					width: '10%',
+					align: 'right'
+				},
+				{
+					header: this.$t('label.name'),
+					name: 'fieldScale',
+					width: '10%',
+					align: 'right'
+				},				
+				{
 					header: this.$t('label.desc'),
 					name: 'fieldDesc',
-					width: '30%'
+					width: '20%'
 				},				
 			],
 		},

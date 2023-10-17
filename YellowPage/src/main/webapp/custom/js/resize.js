@@ -48,9 +48,7 @@ function resizeSearchGrid() {
 
 	var searchGridEl = $(SearchImngObj.searchGrid.el);
 
-	if (0 < searchGridEl.find('.pagination').find('li').length) {
-		adjustHeight -= searchGridEl.find('.pagination').outerHeight(true);
-	} else if (0 < searchGridEl.find('.tui-pagination').length) {
+	if (0 < searchGridEl.find('.tui-pagination').length) {
 		adjustHeight -= searchGridEl.find('.tui-pagination').outerHeight(true);
 	}
 
@@ -61,8 +59,6 @@ function resizeSearchGrid() {
 	adjustHeight -= 20;
 
 	SearchImngObj.searchGrid.setHeight(adjustHeight);
-
-	resizeSearchGridPagination(searchGridEl.attr('id'));
 	
 	setTimeout(function() {
 		var rsideAreaElement = SearchImngObj.searchGrid.el.querySelector('.tui-grid-rside-area');
@@ -73,42 +69,6 @@ function resizeSearchGrid() {
 			rsideAreaElement.querySelector('.tui-grid-scrollbar-y-inner-border').style.height = bodyClientHeight + 'px';
 		}		
 	}, 0);	
-}
-
-function resizeSearchGridPagination(gridAreaId) {
-	if (0 == $('#' + gridAreaId).find('.ImngSearchGridPagination').find('li').length) return;
-
-	var pageNumSumWidth = 0;
-	var scrollLeftSize = 0;
-
-	$('#' + gridAreaId)
-		.find('.ImngSearchGridPagination')
-		.find('li')
-		.each(function (index, item) {
-			pageNumSumWidth += $(item).outerWidth(true);
-
-			if (0 < $(item).find('.active').length)
-				scrollLeftSize =
-					pageNumSumWidth -
-					$(
-						$('#' + gridAreaId)
-							.find('.ImngSearchGridPagination')
-							.find('li')[0]
-					).outerWidth(true);
-		});
-
-	if ($('#' + gridAreaId).width() < pageNumSumWidth) {
-		$('#' + gridAreaId)
-			.find('.ImngSearchGridPagination')
-			.css({ 'justify-content': 'normal', 'overflow-x': 'auto' });
-		$('#' + gridAreaId)
-			.find('.ImngSearchGridPagination')
-			.scrollLeft(scrollLeftSize);
-	} else {
-		$('#' + gridAreaId)
-			.find('.ImngSearchGridPagination')
-			.removeAttr('style');
-	}
 }
 
 function windowResizeModal() {
