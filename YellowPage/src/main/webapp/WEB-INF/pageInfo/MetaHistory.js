@@ -56,7 +56,7 @@ const info = {
             	{
               		header : this.$t('label.update.timestamp'),
               		name : 'pk.modifyDateTime',
-                    width: '25%',
+                    width: '20%',
               		align : 'center',
               		formatter: function(obj) {
               			return obj.value.substring(0, 19);
@@ -65,23 +65,34 @@ const info = {
 				{
               		header : this.$t('label.metaHistory.entityName'),
               		name : 'entityName',
-                    width: '25%',
+                    width: '20%',
             	},
 				{
 					header: this.$t('label.metaHistory.entityId'),
 					name: 'entityId',
-					width: '25%',
+					width: '20%',
 				},	
+				{
+					header: 'Entity Version',
+					name: 'entityVersion',
+					width: '10%',
+					align: 'right'
+				},
 				{
 					header: this.$t('label.metaHistory.modifyType'),
 					name: 'modifyType',
-					width: '25%',
+					width: '20%',
 					align: 'center',
 					formatter: function(value) {
 						var modifyType = value.row.modifyType;
 						return 'D' == modifyType? this.$t('label.delete') : 'I' == modifyType? this.$t('label.insert') : 'R' == modifyType? this.$t('label.restore') : 'U' == modifyType? this.$t('label.update') : '';
 					}
 				},  
+				{
+					header: this.$t('label.update') + ' ' + this.$t('label.user.id'),
+					name: 'updateUserId',
+					width: '10%'
+				}				
 			],
 		},
 	},
