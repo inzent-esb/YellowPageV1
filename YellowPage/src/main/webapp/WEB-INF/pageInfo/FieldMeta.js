@@ -103,7 +103,7 @@ const info = {
 					align: 'right'
 				},
 				{
-					header: this.$t('label.name'),
+					header: 'Scale',
 					name: 'fieldScale',
 					width: '10%',
 					align: 'right'
