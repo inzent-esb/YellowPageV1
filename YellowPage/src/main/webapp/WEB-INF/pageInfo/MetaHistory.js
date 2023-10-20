@@ -127,10 +127,21 @@ const info = {
 							},
 							{
 								type: 'text',
-								vModel: 'pk.modifyId',
-								label: this.$t('label.update') + ' ' + this.$t('label.id'),
-								isPK: true,
+								vModel: 'entityName',
+								label: this.$t('label.metaHistory.entityName'),
 							},
+							{
+								type: 'text',
+								vModel: 'entityId',
+								label: this.$t('label.metaHistory.entityId'),
+							},							
+							{
+                                type: "text",
+                                vModel: "entityVersion",
+                                label: 'Entity Version',
+                            }							
+						],
+						[
 							{
 								type: 'select',
 								vModel: 'modifyType',
@@ -148,24 +159,7 @@ const info = {
 									optionValue: 'option.pk.propertyKey',
 									optionText: 'option.propertyValue',
 								},
-							},					
-						],
-						[
-							{
-								type: 'text',
-								vModel: 'entityName',
-								label: this.$t('label.metaHistory.entityName'),
-							},
-							{
-								type: 'text',
-								vModel: 'entityId',
-								label: this.$t('label.metaHistory.entityId'),
-							},
-                            {
-                                type: "text",
-                                vModel: "entityVersion",
-                                label: 'Entity Version',
-                            },							
+							},	
 							{
 								type: 'text',
 								vModel: 'updateUserId',
@@ -175,6 +169,12 @@ const info = {
 								type: 'text',
 								vModel: 'updateRemoteAddress',
 								label: this.$t('label.metaHistory.remote.address'),
+							},							
+							{
+								type: 'text',
+								vModel: 'pk.modifyId',
+								label: this.$t('label.update') + ' ' + this.$t('label.id'),
+								isPK: true,
 							},
 						],
 					],
