@@ -137,6 +137,7 @@ const info = {
 						},
 						grid: {
 							url: '/api/entity/privilege/search',
+							totalCntUrl: '/api/entity/privilege/count',
 							paging: {
 								isUse: true,
 								side: 'server',
