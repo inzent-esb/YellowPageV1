@@ -123,7 +123,8 @@ const info = {
 				{ id: 'insert', isUse: true },
 				{ id: 'update', isUse: true },
 				{ id: 'delete', isUse: true },
-				{ id: 'reference', isUse: true, className: 'com.inzent.yellowpage.model.FieldMeta' }
+				{ id: 'reference', isUse: true, className: 'com.inzent.yellowpage.model.FieldMeta' },
+				{ id: 'metaHistory', isUse: true, className: 'com.inzent.yellowpage.model.FieldMeta', entityIdKey: ['pk.metaDomain', 'pk.fieldId'] },
 			],
 		},
 		tabList: [

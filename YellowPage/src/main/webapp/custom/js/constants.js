@@ -35,7 +35,7 @@ var constants = {
 	},
 	
 	grid : {
-        gridOptionFunc: function(menuId, gridOptions) {
+        gridOptionFunc: function(menuId, searchUrl, gridOptions) {
 			/*
 			if ('301000' === url) {
 				gridOptions.options.columns[0].sortable = true;
@@ -44,14 +44,16 @@ var constants = {
 			
 			return gridOptions;
 		},
-		pageOptionFunc: function(searchUrl) {
+		pageOptionFunc: function(menuId, searchUrl) {
 			var limit = 100;
 			var ascending = true;
 			
 			// 수정내역, 공지사항, 배포 로그
-			if ('302000' === searchUrl || '301000' === searchUrl || '105000' === searchUrl) {
+			if ('302000' === menuId || '301000' === menuId || '105000' === menuId) {
 				ascending = false;
-			}
+            } else if (('101000' === menuId || '102000' === menuId || '103000' === menuId || '206000' === menuId) && '/api/entity/metaHistory/search' === searchUrl) {
+                ascending = false;
+            }
 
 			return {
 				limit: limit,

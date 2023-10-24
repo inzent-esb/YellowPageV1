@@ -1745,7 +1745,7 @@ function getMakeGridObj() {
 	function makeGridObj() {
 		this.setConfig = function (options, paramIsModalGrid, formatterData) {
 			if(!paramIsModalGrid) {
-				options = constants.grid.gridOptionFunc(getCurrentMenuId(), options);
+				options = constants.grid.gridOptionFunc(getCurrentMenuId(), options.searchUrl, options);
 			}
 
 			searchUrl = options.searchUrl;
@@ -1921,7 +1921,7 @@ function getMakeGridObj() {
 				if ('client' === paging.side) {
 					param.limit = totalCnt;
 				} else if ('server' === paging.side) {
-					var rtnPageOption = constants.grid.pageOptionFunc(getCurrentMenuId());
+					var rtnPageOption = constants.grid.pageOptionFunc(getCurrentMenuId(), searchUrl);
 					
 					var limit = rtnPageOption.limit;
 					var ascending = rtnPageOption.ascending;
