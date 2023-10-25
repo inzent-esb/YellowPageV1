@@ -7,6 +7,8 @@
 YellowPage 엔진 Jar 파일(YellowPage-Release-1.2.0.zip/jar)은 Redmine에서 다운로드 후 적용하시기 바랍니다.</br>
 -->
 
+YellowPage 엔진 Jar 파일(YellowPage-Release-1.2.0.zip/jar)은 Redmine에서 다운로드 후 적용하시기 바랍니다.</br>
+
 VS CODE 파일 : https://project.inzent.com/redmine/attachments/7053 </br>
 NODE(v14.17.6) 파일 : https://project.inzent.com/redmine/attachments/7054 </br>
 
