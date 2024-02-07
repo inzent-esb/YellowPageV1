@@ -872,6 +872,10 @@ select.panel-form-control {
 	border-bottom-width: 1px !important;
 }
 
+.refModelField.tui-grid-cell{
+	background-color: #ffffd2 !important;
+}
+
 .panel .searchArea-col {
 	padding: 0 .25rem !important;
 }

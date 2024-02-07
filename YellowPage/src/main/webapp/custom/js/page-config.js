@@ -428,6 +428,20 @@ function getCreatePageObj() {
 								'v-on:input': detailContentObj.regExpType? 'inputEvt(' + JSON.stringify(regExpInputInfo)  + ')' : null
 							})
 							.show();
+						
+						if (detailContentObj.clickEvt) {
+							detailContentObj.object
+											.children('.input-group')
+											.append(
+												$('<button/>')
+													.addClass('btn btn-icon search-linkBtn viewGroup')
+													.attr({ 
+														type: 'button',
+														'v-on:click': String(detailContentObj.clickEvt)
+													})
+													.append($('<i/>').addClass('icon-link'))
+											)
+						}
 					}
 					
 					
@@ -514,9 +528,17 @@ function getCreatePageObj() {
 				});
 
 				if (detailContentObj.clickEvt) {
-					detailContentObj.object.children('.input-group').attr({ 'v-on:click': detailContentObj.clickEvt });
-					detailContentObj.object.children('.input-group').children('input[type=text]').addClass('underlineTxt');
-					detailContentObj.object.children('.input-group').css({ cursor: 'pointer' });
+					detailContentObj.object
+									.children('.input-group')
+									.append(
+										$('<button/>')
+											.addClass('btn btn-icon search-linkBtn viewGroup')
+											.attr({
+												type: 'button',
+												'v-on:click': String(detailContentObj.clickEvt)
+											})
+											.append($('<i/>').addClass('icon-link'))
+									)
 				}
 
 				if (detailContentObj.btnClickEvt) detailContentObj.object.children('.input-group').append($('<button/>').attr({ 'v-on:click': detailContentObj.btnClickEvt }).addClass('btn btn-icon').css({ 'margin-left': '3px', padding: '5px 10px 0px 10px' }).append($('<i/>').addClass('icon-link')));
@@ -649,6 +671,20 @@ function getCreatePageObj() {
 							'v-on:click': detailContentObj.mappingDataInfo.vModel + '= null;' + 'window.vmMain.$forceUpdate();'
 						});
 				}
+				
+				if (detailContentObj.clickEvt) {
+					detailContentObj.object
+									.children('.input-group')
+									.append(
+											$('<button/>')
+												.addClass('btn btn-icon search-linkBtn viewGroup')
+												.attr({
+													type: 'button',
+													'v-on:click': String(detailContentObj.clickEvt)
+												})
+												.append($('<i/>').addClass('icon-link'))
+									)
+				}
 			}
 			
 			function singleDateBasicType(detailContentObj) {
@@ -681,8 +717,20 @@ function getCreatePageObj() {
 
 				if (detailContentObj.id) selectAttr.attr({ id: detailContentObj.id });
 
-				if (detailContentObj.clickEvt) detailContentObj.object.children('.input-group').append($('<button/>').attr({ 'v-on:click': detailContentObj.clickEvt }).addClass('btn btn-icon').css({ 'margin-left': '3px', padding: '5px 10px 0px 10px' }).append($('<i/>').addClass('icon-link')));
-
+				if (detailContentObj.clickEvt) {
+					detailContentObj.object
+									.children('.input-group')
+									.append(
+										$('<button/>')
+											.addClass('btn btn-icon search-linkBtn viewGroup')
+											.attr({ 
+												type: 'button',
+												'v-on:click': String(detailContentObj.clickEvt)
+											})
+											.append($('<i/>').addClass('icon-link'))
+									)
+				}
+				
 				if (detailContentObj.placeholder) {
 					selectAttr.append(
 						$('<option/>')
@@ -1123,6 +1171,22 @@ function getCreatePageObj() {
 							.append($('<span/>').text('/' + detailContentObj.maxLength + ')'))
 					  	);
 				}
+				
+				if (detailContentObj.clickEvt) {
+					detailContentObj.appendTag.children('input').wrap('<div class="input-group"></div>');
+					
+					detailContentObj.appendTag
+									.children('div.input-group')
+									.append(
+										$('<button/>')
+											.addClass('btn btn-icon search-linkBtn viewGroup')
+											.attr({ 
+												type: 'button', 
+												'v-on:click': String(detailContentObj.clickEvt)
+											})
+											.append($('<i/>').addClass('icon-link'))
+									)
+				}
 								
 				return detailContentObj.appendTag;
 			}
@@ -1169,10 +1233,20 @@ function getCreatePageObj() {
 							)
 					);
 				
-				if(detailContentObj.clickEvt) {
-					detailContentObj.appendTag.attr({'v-on:click': detailContentObj.clickEvt});
-					detailContentObj.appendTag.children('input[type=search]').addClass('underlineTxt');
-					detailContentObj.appendTag.css({cursor: 'pointer'});
+				if (detailContentObj.clickEvt) {
+					detailContentObj.appendTag
+									.append(
+										$('<button/>')
+											.addClass('btn btn-icon search-linkBtn viewGroup')
+											.attr({ 
+												type: 'button',
+												'v-on:click': String(detailContentObj.clickEvt)
+											})
+											.css({
+												'margin-left': '3px'
+											})
+											.append($('<i/>').addClass('icon-link'))
+									)
 				}
 				
 				return detailContentObj.appendTag;

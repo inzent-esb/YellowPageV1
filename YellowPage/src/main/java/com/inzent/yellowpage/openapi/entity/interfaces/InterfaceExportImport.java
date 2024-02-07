@@ -351,7 +351,7 @@ public class InterfaceExportImport implements EntityExportImportBean<InterfaceMe
 	if(null != source) {
 		interfaceMeta.setInterfaceProperties(source.getInterfaceProperties());
 	} else {
-		interfaceService.generateProperties(interfaceMeta);
+		interfaceService.generateProperties(interfaceMeta, false);
 	}
 	
 	//Response

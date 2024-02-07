@@ -295,7 +295,9 @@ document.querySelector('#AddServiceRoot').addEventListener('ready', function(evt
 	        var systemTargets = $('#interfaceClassList option:selected').data('systemTargets');
 	        
 	        systemTargets.forEach(function(systemTarget) {
-	        	$('#targetSystem').append($('<option/>').attr({value: escapeHtml(systemTarget.pk.id)}).text(systemTarget.pk.id));
+	        	new HttpReq("/api/entity/system/object").read({id: systemTarget.pk.id}, function(result) {
+					if ('Y' === result.object.useYn) $('#targetSystem').append($('<option/>').attr({value: escapeHtml(systemTarget.pk.id)}).text(systemTarget.pk.id));
+				})
 	        });
 	        
 	        $('#targetSystem').trigger('change');		

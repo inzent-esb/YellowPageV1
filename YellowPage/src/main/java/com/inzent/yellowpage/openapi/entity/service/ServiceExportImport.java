@@ -305,7 +305,7 @@ public class ServiceExportImport implements EntityExportImportBean<ServiceMeta>
 		if (null != source) {	
 			serviceMeta.setServiceProperties(source.getServiceProperties());
 		} else {
-			serviceService.generateProperties(serviceMeta);
+			serviceService.generateProperties(serviceMeta, false);
 		}
 	    
 		return serviceMeta;

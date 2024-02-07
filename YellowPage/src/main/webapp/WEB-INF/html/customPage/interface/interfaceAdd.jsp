@@ -387,12 +387,16 @@ document.querySelector('#interfaceAddRoot').addEventListener('ready', function(e
 		
 		if(systemSources)
 			systemSources.forEach(function(systemSource) {
-				$('#sourceSystem').append( $('<option/>').attr({value: escapeHtml(systemSource.pk.id)}).text(systemSource.pk.id) );
+				new HttpReq("/api/entity/system/object").read({id: systemSource.pk.id}, function(result) {
+					if ('Y' === result.object.useYn) $('#sourceSystem').append( $('<option/>').attr({value: escapeHtml(systemSource.pk.id)}).text(systemSource.pk.id) );
+				})
 			});
 		
 		if(systemTargets)
 			systemTargets.forEach(function(systemTarget) {
-				$('#targetSystem').append( $('<option/>').attr({value: escapeHtml(systemTarget.pk.id)}).text(systemTarget.pk.id) );
+				new HttpReq("/api/entity/system/object").read({id: systemTarget.pk.id}, function(result) {
+					if ('Y' === result.object.useYn) $('#targetSystem').append( $('<option/>').attr({value: escapeHtml(systemTarget.pk.id)}).text(systemTarget.pk.id) );
+				})
 			});
 		
 		new HttpReq('/api/page/properties').read({

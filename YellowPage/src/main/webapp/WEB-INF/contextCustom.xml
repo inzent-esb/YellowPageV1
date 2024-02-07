@@ -69,7 +69,8 @@
 		<security:intercept-url pattern="/api/entity/fieldMeta/**" access="hasRole('ROLE_RecordViewer')" />
 		<security:intercept-url pattern="/api/entity/interface/**" access="hasRole('ROLE_InterfaceViewer')" />
 		<security:intercept-url pattern="/api/entity/interfaceClass/search" access="isAuthenticated()"/>
-		<security:intercept-url pattern="/api/entity/interfaceClass/**" access="hasRole('ROLE_PropertyViewer')" />		
+		<security:intercept-url pattern="/api/entity/interfaceClass/**" access="hasRole('ROLE_PropertyViewer')" />
+		<security:intercept-url pattern="/api/entity/mappingFunction/**" access="hasRole('ROLE_MappingFunctionViewer')" />
 		<security:intercept-url pattern="/api/entity/menu/**" access="isAuthenticated()" />
 		<security:intercept-url pattern="/api/entity/message/**" access="hasRole('ROLE_MessageViewer')" />
 		<security:intercept-url pattern="/api/entity/metaHistory/**" access="hasRole('ROLE_MetaHistoryViewer')" />
@@ -94,6 +95,7 @@
 		<security:intercept-url pattern="/api/entity/system/**" access="hasRole('ROLE_SystemViewer')" />
 		<security:intercept-url pattern="/api/entity/user/password" access="permitAll()" />
 		<security:intercept-url pattern="/api/entity/user/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/api/mapping/**" access="isAuthenticated()" />
 		<security:intercept-url pattern="/api/page/login" access="permitAll()" />
 		<security:intercept-url pattern="/api/page/logoFileName" access="permitAll()" />
 		<security:intercept-url pattern="/api/page/password" access="permitAll()" />
