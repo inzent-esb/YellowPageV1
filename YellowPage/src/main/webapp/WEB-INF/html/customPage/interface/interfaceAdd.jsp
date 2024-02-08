@@ -193,6 +193,8 @@
 document.querySelector('#interfaceAddRoot').addEventListener('ready', function(evt) {
 	getIsPublishService();
 	
+	var useSystemList = [];
+	
 	function getIsPublishService() {
 		(new HttpReq("/api/page/isPublishService")).read(null, function(res) {
 			var isPublishService = res.object;
@@ -240,7 +242,21 @@ document.querySelector('#interfaceAddRoot').addEventListener('ready', function(e
 				if (result.object) {
 					result.object.forEach(function(object, idx) {
 						$('#linkedServerList').append($('<option/>').attr({value: escapeHtml(object.id)}).text(object.name));
-					});					
+					});
+					
+					new HttpReq("/api/entity/system/search").read(
+						{
+							object: {},
+							limit: null,
+							next: null,
+							reverseOrder: false				
+						}, 
+						function(result) {
+							useSystemList = result.object.filter(function(info) {
+								return "Y" === info.useYn;
+							});
+						}
+					);
 				}
 				
 				$('#linkedServerList').trigger('change');	
@@ -385,18 +401,23 @@ document.querySelector('#interfaceAddRoot').addEventListener('ready', function(e
 		var sourceType = $('#interfaceClass option:selected').data('sourceType');
 		var targetType = $('#interfaceClass option:selected').data('targetType');
 		
-		if(systemSources)
+		if(systemSources) 
 			systemSources.forEach(function(systemSource) {
-				new HttpReq("/api/entity/system/object").read({id: systemSource.pk.id}, function(result) {
-					if ('Y' === result.object.useYn) $('#sourceSystem').append( $('<option/>').attr({value: escapeHtml(systemSource.pk.id)}).text(systemSource.pk.id) );
-				})
+				var userSystemSource = useSystemList.find(function(system) {
+					return systemSource.pk.id === system.id;
+				});
+				
+				if (userSystemSource) $('#sourceSystem').append( $('<option/>').attr({value: escapeHtml(systemSource.pk.id)}).text(systemSource.pk.id) );
 			});
+			
 		
 		if(systemTargets)
 			systemTargets.forEach(function(systemTarget) {
-				new HttpReq("/api/entity/system/object").read({id: systemTarget.pk.id}, function(result) {
-					if ('Y' === result.object.useYn) $('#targetSystem').append( $('<option/>').attr({value: escapeHtml(systemTarget.pk.id)}).text(systemTarget.pk.id) );
-				})
+				var userSystemTarget = useSystemList.find(function(system) {
+					return systemTarget.pk.id === system.id;
+				});
+				
+				if (userSystemTarget) $('#targetSystem').append( $('<option/>').attr({value: escapeHtml(systemTarget.pk.id)}).text(systemTarget.pk.id) );
 			});
 		
 		new HttpReq('/api/page/properties').read({

@@ -325,3 +325,8 @@
 .moon #ct:not(.ct-dashboard) .userPrivileges *.admin { background-color: rgba(150, 150, 150, 0.7) !important; }
 .moon #ct:not(.ct-dashboard) .userPrivileges *.member { background-color: #484f70 !important; }
 .moon #ct:not(.ct-dashboard) .userPrivileges *.none { background-color: #1f2337 !important; }
+
+.moon .tui-grid-scrollbar-left-bottom {background: transparent;border-color: transparent;}
+.moon #mappingModal .table-responsive .tui-grid-cell-current-row td {background-color: #8a8b92;}
+.moon #referenceModal .control-label {color: #fff !important;}
+.moon .refModelField.tui-grid-cell {background-color: #8a8b92 !important;}

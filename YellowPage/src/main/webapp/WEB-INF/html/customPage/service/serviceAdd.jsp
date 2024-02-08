@@ -143,6 +143,8 @@ document.querySelector('#AddServiceRoot').addEventListener('ready', function(evt
 	
 	getBizList();
 	
+	var useSystemList = [];
+	
 	function getLinkedServerList() {
 		new HttpReq("/api/entity/server/search").read(
 			{
@@ -155,7 +157,21 @@ document.querySelector('#AddServiceRoot').addEventListener('ready', function(evt
 				if (result.object) {
 					result.object.forEach(function(object, idx) {
 						$('#linkedServerList').append($('<option/>').attr({value: escapeHtml(object.id)}).text(object.name));
-					});					
+					});	
+					
+					new HttpReq("/api/entity/system/search").read(
+						{
+							object: {},
+							limit: null,
+							next: null,
+							reverseOrder: false				
+						}, 
+						function(result) {
+							useSystemList = result.object.filter(function(info) {
+								return "Y" === info.useYn;
+							});
+						}
+					);
 				}
 				
 				$('#linkedServerList').trigger('change');	
@@ -295,9 +311,13 @@ document.querySelector('#AddServiceRoot').addEventListener('ready', function(evt
 	        var systemTargets = $('#interfaceClassList option:selected').data('systemTargets');
 	        
 	        systemTargets.forEach(function(systemTarget) {
-	        	new HttpReq("/api/entity/system/object").read({id: systemTarget.pk.id}, function(result) {
-					if ('Y' === result.object.useYn) $('#targetSystem').append($('<option/>').attr({value: escapeHtml(systemTarget.pk.id)}).text(systemTarget.pk.id));
-				})
+	        	console.log(systemTarget);
+	        	
+	        	var usersystemTarget = useSystemList.find(function(system) {
+					return systemTarget.pk.id === system.id;
+				});
+				
+				if (usersystemTarget) $('#targetSystem').append($('<option/>').attr({value: escapeHtml(systemTarget.pk.id)}).text(systemTarget.pk.id));
 	        });
 	        
 	        $('#targetSystem').trigger('change');		
