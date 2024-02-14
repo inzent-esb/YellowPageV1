@@ -42,28 +42,6 @@
 		</property>
 	</bean>
 
-	<bean id="corsSource" class="org.springframework.web.cors.UrlBasedCorsConfigurationSource">
-		<property name="corsConfigurations">
-			<map>
-				<entry key="/**">
-					<bean class="org.springframework.web.cors.CorsConfiguration">
-						<property name="allowCredentials" value="true" />
-						<property name="allowedHeaders" value="*" />
-						<property name="allowedMethods" value="*" />
-						<property name="allowedOrigins" value="http://localhost:1112" />
-						<property name="exposedHeaders">
-							<list>
-								<value>X-iManager-Access</value>
-								<value>X-iManager-Refresh</value>
-							</list>
-						</property>
-						<property name="maxAge" value="86400" />
-					</bean>
-				</entry>
-			</map>
-		</property>
-	</bean>
-
 	<security:http auto-config="false" entry-point-ref="accessDeniedHandler" security-context-repository-ref="tokenRepository">
 		<security:intercept-url pattern="/api/auth/token" access="permitAll()" />
 		<security:intercept-url pattern="/api/entity/fieldMeta/**" access="hasRole('ROLE_RecordViewer')" />
@@ -106,6 +84,5 @@
 
 		<security:access-denied-handler ref="accessDeniedHandler" />
 		<security:csrf disabled="true" />
-		<security:cors configuration-source-ref="corsSource"/>
 	</security:http>
 </beans>
