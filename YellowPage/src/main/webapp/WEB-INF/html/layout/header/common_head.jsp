@@ -9,7 +9,7 @@
 <c:set var="serverName" value="<%= request.getServerName() %>" />
 <c:set var="serverPort" value="<%= request.getServerPort() %>" />
 <c:set var="contextPath" value="<%= request.getContextPath() %>" />
-<c:set var="prefixUrl" value="http://${serverName}:${serverPort}${contextPath}" />
+<c:set var="prefixUrl" value="//${serverName}:${serverPort}${contextPath}" />
 <c:set var="prefixFileUrl" value="${prefixUrl}/custom" /> <%-- css/fonts/img/js 경로 --%>
 
 <link rel="stylesheet" type="text/css" href="${prefixFileUrl}/css/common-external.css">
@@ -57,6 +57,20 @@ function makeScript(idx) {
 		if (idx === scriptInfoArr.length - 1) {
 			$('[data-ready]').each(function(index, element) {
 				element.dispatchEvent(new CustomEvent('ready'));
+				
+				tui.Grid.applyTheme('clean', {
+					row: {
+						hover: {
+							background: '#f5f6fb',
+						},
+					},
+				});
+
+				tui.Grid.setLanguage('en', {
+					display: {
+						noData: '<fmt:message>msg.noData</fmt:message>',
+					},
+				});				
 			});
 			
 			if (2 == $('[data-ready]').children('.ct-header, .ct-content').length) {

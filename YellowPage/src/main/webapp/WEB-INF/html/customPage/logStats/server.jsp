@@ -249,8 +249,7 @@
 			        	downloadFile: function() {
 			        		downloadFileFunc({ 
 			        			url : '/api/statistics/server',  
-			        			param : window.vmSearch.object,
-			        			fileName : '<fmt:message>label.stats.linkedServer</fmt:message>_' + moment(new Date()).format('YYYY-MM-DD HH:mm:ss') + '_' + Date.now() + '.xlsx'
+			        			param : window.vmSearch.object
 			        		});
 			        	}
 			        }),

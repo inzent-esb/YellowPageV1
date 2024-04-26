@@ -62,9 +62,10 @@ public class InterfaceExportImport implements EntityExportImportBean<InterfaceMe
   @Override
   public void exportList(HttpServletRequest request, HttpServletResponse response, InterfaceMeta entity, List<InterfaceMeta> list) throws Exception
   {
-    String fileName = "Interface_" + FastDateFormat.getInstance("yyyy-MM-dd hh:mm").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
+    String fileName = "InterfaceList_" + FastDateFormat.getInstance("yyyyMMdd_hhmmss").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
 		
     response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
     response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + URLEncoder.encode(fileName, JsonEncoding.UTF8.getJavaName()).replaceAll("\\+", "%20"));
     response.setContentType("application/octet-stream");
 		
@@ -80,9 +81,10 @@ public class InterfaceExportImport implements EntityExportImportBean<InterfaceMe
     	Workbook workbook = WorkbookFactory.create(fileInputStream);
     	OutputStream outputStream = response.getOutputStream();)
     {
-      String fileName = "InterfaceTemplate_" + FastDateFormat.getInstance("yyyy-MM-dd hh:mm").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
+      String fileName = "Interface_" + entity.getId() + "_" + FastDateFormat.getInstance("yyyyMMdd_hhmmss").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
       
       response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
       response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + URLEncoder.encode(fileName, JsonEncoding.UTF8.getJavaName()).replaceAll("\\+", "%20"));
       response.setContentType("application/octet-stream");
       
@@ -349,7 +351,7 @@ public class InterfaceExportImport implements EntityExportImportBean<InterfaceMe
 	if(null != source) {
 		interfaceMeta.setInterfaceProperties(source.getInterfaceProperties());
 	} else {
-		interfaceService.generateProperties(interfaceMeta);
+		interfaceService.generateProperties(interfaceMeta, false);
 	}
 	
 	//Response

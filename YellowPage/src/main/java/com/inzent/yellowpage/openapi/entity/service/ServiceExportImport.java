@@ -57,9 +57,10 @@ public class ServiceExportImport implements EntityExportImportBean<ServiceMeta>
   @Override
   public void exportList(HttpServletRequest request, HttpServletResponse response, ServiceMeta entity, List<ServiceMeta> list) throws Exception
   {
-    String fileName = "Service_" + FastDateFormat.getInstance("yyyy-MM-dd hh:mm").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
+    String fileName = "ServiceList_" + FastDateFormat.getInstance("yyyyMMdd_hhmmss").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
     
     response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
     response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + URLEncoder.encode(fileName, JsonEncoding.UTF8.getJavaName()).replaceAll("\\+", "%20"));
 	response.setContentType("application/octet-stream");
 	
@@ -75,9 +76,10 @@ public class ServiceExportImport implements EntityExportImportBean<ServiceMeta>
     	Workbook workbook = WorkbookFactory.create(fileInputStream);
     	OutputStream outputStream = response.getOutputStream();)
     {
-      String fileName = "ServiceTemplate_" + FastDateFormat.getInstance("yyyy-MM-dd hh:mm").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
+      String fileName = "Service_"+ entity.getId() + "_"+ FastDateFormat.getInstance("yyyyMMdd_hhmmss").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
       
       response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
       response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + URLEncoder.encode(fileName, JsonEncoding.UTF8.getJavaName()).replaceAll("\\+", "%20"));
       response.setContentType("application/octet-stream"); 
       
@@ -303,7 +305,7 @@ public class ServiceExportImport implements EntityExportImportBean<ServiceMeta>
 		if (null != source) {	
 			serviceMeta.setServiceProperties(source.getServiceProperties());
 		} else {
-			serviceService.generateProperties(serviceMeta);
+			serviceService.generateProperties(serviceMeta, false);
 		}
 	    
 		return serviceMeta;

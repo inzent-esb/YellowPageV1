@@ -84,7 +84,7 @@
 		<property name="metaEntityRepository" ref="serverInterfaceRepository" />
 	</bean>
 
-	<bean id="systemRepository" class="com.inzent.imanager.repository.MetaEntityRepository">
+	<bean id="systemRepository" class="com.inzent.yellowpage.repository.TraceModelRepository">
 		<constructor-arg value="com.inzent.yellowpage.model.SystemMeta" />
 	</bean>
 

@@ -54,9 +54,10 @@ public class RecordExportImport implements EntityExportImportBean<ModelRecord> {
 	
 	@Override
 	public void exportList(HttpServletRequest request, HttpServletResponse response, ModelRecord entity, List<ModelRecord> list) throws Exception {
-		String fileName = "Record_" + FastDateFormat.getInstance("yyyy-MM-dd hh:mm").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
+		String fileName = "RecordList_" + FastDateFormat.getInstance("yyyyMMdd_hhmmss").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
 
 		response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + URLEncoder.encode(fileName, JsonEncoding.UTF8.getJavaName()).replaceAll("\\+", "%20"));
 		response.setContentType("application/octet-stream");
 
@@ -67,9 +68,10 @@ public class RecordExportImport implements EntityExportImportBean<ModelRecord> {
 
 	@Override
 	public void exportObject(HttpServletRequest request, HttpServletResponse response, ModelRecord entity) throws Exception {
-		String fileName = "RecordTemplate_" + FastDateFormat.getInstance("yyyy-MM-dd hh:mm").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
+		String fileName = "Record_" + entity.getId() + "_" + FastDateFormat.getInstance("yyyyMMdd_hhmmss").format(new Timestamp(System.currentTimeMillis())) + ".xlsx";
 
 		response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + URLEncoder.encode(fileName, JsonEncoding.UTF8.getJavaName()).replaceAll("\\+", "%20"));
 		response.setContentType("application/octet-stream");
 

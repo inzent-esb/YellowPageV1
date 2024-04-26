@@ -58,7 +58,7 @@ const info = {
 				{
 					header: this.$t('label.metaDomain'),
 					name: 'pk.metaDomain',
-					width: '20%'
+					width: '15%'
 				},				
 				{
 					header: this.$t('label.id'),
@@ -68,7 +68,7 @@ const info = {
 				{
 					header: this.$t('label.name'),
 					name: 'fieldName',
-					width: '20%'
+					width: '15%'
 				},
 				{
 					header: this.$t('label.type'),
@@ -97,9 +97,21 @@ const info = {
 		            }
 				},
 				{
+					header: this.$t('label.length'),
+					name: 'fieldLength',
+					width: '10%',
+					align: 'right'
+				},
+				{
+					header: 'Scale',
+					name: 'fieldScale',
+					width: '10%',
+					align: 'right'
+				},				
+				{
 					header: this.$t('label.desc'),
 					name: 'fieldDesc',
-					width: '30%'
+					width: '20%'
 				},				
 			],
 		},
@@ -111,6 +123,8 @@ const info = {
 				{ id: 'insert', isUse: true },
 				{ id: 'update', isUse: true },
 				{ id: 'delete', isUse: true },
+				{ id: 'reference', isUse: true, className: 'com.inzent.yellowpage.model.FieldMeta' },
+				{ id: 'metaHistory', isUse: true, className: 'com.inzent.yellowpage.model.FieldMeta', entityIdKey: ['pk.metaDomain', 'pk.fieldId'] },
 			],
 		},
 		tabList: [
@@ -275,6 +289,39 @@ const info = {
 								height: '110px',
 								regExpType: 'desc',
 							}
+						]
+					]
+				]
+			},
+			{
+				id: 'useInfo',
+				type: 'basic',
+				label: this.$t('label.useInfo'),
+				content: [
+					[
+						[
+							{
+								type: 'text',
+								vModel: 'updateUserId',
+								label: this.$t('label.writer'),
+								readonly: true
+							},
+							{
+								type: 'text',
+								vModel: 'updateTimestamp',
+								label: this.$t('label.created.date'),
+								readonly: true,
+								formatter: function(value) {
+									return value ? value.substring(0, 19) : value;
+								}
+							},
+							{
+								type: 'text',
+								vModel: 'updateVersion',
+								label: 'Version',
+								readonly: true,
+								val: '0'
+							}							
 						]
 					]
 				]

@@ -39,9 +39,10 @@ public class PublishLogExportImport implements EntityExportImportBean<PublishLog
   @Override
   public void exportList(HttpServletRequest request, HttpServletResponse response, PublishLog entity, List<PublishLog> list) throws Exception
   {
-    String fileName = "PublishLog_" + FastDateFormat.getInstance("yyyy-MM-dd hh:mm").format(new Timestamp(System.currentTimeMillis())) + ".xlsx" ;
+    String fileName = "PublishLog_" + FastDateFormat.getInstance("yyyyMMdd_hhmmss").format(new Timestamp(System.currentTimeMillis())) + ".xlsx" ;
 
     response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate") ;
+    response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
     response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + URLEncoder.encode(fileName, JsonEncoding.UTF8.getJavaName()).replaceAll("\\+", "%20")) ;
     response.setContentType("application/octet-stream") ;
 
