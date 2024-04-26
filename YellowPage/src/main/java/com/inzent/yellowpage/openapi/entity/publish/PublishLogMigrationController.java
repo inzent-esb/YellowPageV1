@@ -88,7 +88,7 @@ public class PublishLogMigrationController extends ApiController
       parent.mkdirs() ;
 
       PublishLogPK publishLogPK = migrationList.getPublishLogPKs().get(0) ;
-      String name = publishLogPK.getPublishDateTime().replace(':', '-') + "-" + publishLogPK.getPublishId() + ".dat" ;
+      String name = publishLogPK.getPublishDateTime().replace(':', '-').replace(' ', '_') + "-" + publishLogPK.getPublishId() + ".dat" ;
       file = new File(parent, name) ;
 
       try (OutputStream os = new FileOutputStream(file)) 
