@@ -18,8 +18,8 @@ var constants = {
 	motionDetectTime: 1000,
 	autoLogoutTime: 1200000,
 	
-	//escape: 27, space: 32
-	modalCloseKeyCode: [27, 32],
+	//escape: 27
+	modalCloseKeyCode: [27],
 	isUseTheme: true,
 	
 	search: {
