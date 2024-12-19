@@ -751,6 +751,7 @@ body{scrollbar-3dLight-Color: #efefef; scrollbar-arrow-color: #f0f1f6; scrollbar
     .login #ct{align-items: center;justify-content: flex-start}
     .form-login>img{display: block;margin-left: auto;margin-right: auto}
     .form-login>.password-label, .form-login>.product-name{text-align: center;}
+    .form-login>.product-name{margin-left: 25%}
 
     /* loader */
     .spinner{width: 4rem;height: 4rem}
@@ -977,7 +978,7 @@ span.ellipsis {
 }
 
 .tui-grid-context-menu {
-    display: none;
+	font-family: 'Nanum Gothic';
 }
 
 .loginLayout {
@@ -1135,4 +1136,8 @@ span.ellipsis {
 
 .modal-backdrop.fade {
 	transition: none !important;
+}
+
+.tui-grid-cell.gray, .tui-grid-row-hover > .tui-grid-cell.gray, .tui-grid-cell-row-header.tui-grid-cell-selected.gray {
+	background-color: #eee !important;
 }

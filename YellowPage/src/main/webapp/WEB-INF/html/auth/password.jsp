@@ -16,7 +16,9 @@
         </header>
         <div id="ct">
         	<div class="form-login">
-	            <img src="${prefixFileUrl}/img/product-name.svg" alt="ESB">
+				<div class="product-name">
+					<img src="${prefixFileUrl}/img/title.svg" />
+				</div>
 	            
 				<div class="password-label"><fmt:message>label.password.page</fmt:message></div>
 				
