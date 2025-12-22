@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List ;
 import java.util.stream.Collectors;
 
-import jakarta.servlet.http.HttpServletRequest ;
-import jakarta.servlet.http.HttpServletResponse ;
+import javax.servlet.http.HttpServletRequest ;
+import javax.servlet.http.HttpServletResponse ;
 
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -122,7 +122,7 @@ public class InterfaceExportImport implements EntityExportImportBean<InterfaceMe
 	}
   }
   
-  public void exportExcelSheet(Workbook workbook, int sheetIdx, InterfaceMeta entity) throws Exception
+  public void exportExcelSheet(Workbook workbook, int sheetIdx, InterfaceMeta entity)
   {
 	  Sheet writeSheet = workbook.getSheetAt(sheetIdx);
 	  Row row = null;
@@ -170,16 +170,18 @@ public class InterfaceExportImport implements EntityExportImportBean<InterfaceMe
 	  cell.setCellValue(entity.getServerId());
 	  
 	  // 인터페이스 Class
-	  if (null != entity.getInterfaceClass() && 0 < entity.getInterfaceClass().trim().length()) {
-    	  InterfaceClass interfaceClass = interfaceClassService.search(new InterfaceClass(), -1, null, false).stream()
-											    	    .filter(interfaceClassInfo -> interfaceClassInfo.getId().equals(entity.getInterfaceClass()))
-											    	    .collect(Collectors.toList())
-											    	    .get(0);
-    	  
-    	  cell = row.getCell(7);
-    	  cell.setCellStyle(cellStyle_Base);
-    	  cell.setCellValue(interfaceClass.getName());
-      }
+	  cell = row.getCell(7);
+	  cell.setCellStyle(cellStyle_Base);
+	  
+	  String value = entity.getInterfaceClass();
+	  
+	  switch(value) {
+	  	case "B": value = MessageGenerator.getMessage("label.file", "File"); break;
+	  	case "D": value = MessageGenerator.getMessage("label.DB", "DB"); break;
+	  	case "S": value = MessageGenerator.getMessage("label.specialty", "specialty"); break;
+	  }
+	  
+	  cell.setCellValue(value);
 	  
 	  // 사용 여부
 	  cell = row.getCell(9);
@@ -305,15 +307,18 @@ public class InterfaceExportImport implements EntityExportImportBean<InterfaceMe
 	interfaceMeta.setServerId(cell.getStringCellValue());
 	  
 	// 인터페이스 Class
-	cell = row.getCell(7);
+	cell = row.getCell(7);	
 	String value = cell.getStringCellValue();
+	  
+	if(value.equals(MessageGenerator.getMessage("label.file", "File"))) {
+		value = "B";
+	} else if(value.equals(MessageGenerator.getMessage("label.DB", "DB"))) {
+		value = "D";
+	} else if(value.equals(MessageGenerator.getMessage("label.specialty", "specialty"))) {
+		value = "S";
+	}
 	
-	InterfaceClass interfaceClass = interfaceClassService.search(new InterfaceClass(), -1, null, false).stream()
-    	    .filter(interfaceClassInfo -> value.trim().equals(interfaceClassInfo.getName().trim()))
-    	    .collect(Collectors.toList())
-    	    .get(0);
-	
-	interfaceMeta.setInterfaceClass(interfaceClass.getId());
+	interfaceMeta.setInterfaceClass(value);
 	
 	row = writeSheet.getRow(5);
 	  

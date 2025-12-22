@@ -9,8 +9,8 @@ import java.util.List ;
 import java.util.Map;
 import java.util.stream.Collectors ;
 
-import jakarta.servlet.http.HttpServletRequest ;
-import jakarta.servlet.http.HttpServletResponse ;
+import javax.servlet.http.HttpServletRequest ;
+import javax.servlet.http.HttpServletResponse ;
 
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.poi.ss.usermodel.Cell;
@@ -106,8 +106,7 @@ public class StatsUserExportImport implements EntityExportImportBean<StatsUser>
 	      
 	      // 구분
 	      if('I' == entity.getPk().getStatsType())			values = MessageGenerator.getMessage("label.interface", "Interface");
-    	  else if ('S' == entity.getPk().getStatsType())	values = MessageGenerator.getMessage("label.service", "Service"); 	     
-    	  else 												values = "";
+    	  else if ('S' == entity.getPk().getStatsType())	values = MessageGenerator.getMessage("label.service", "Service"); 	      
 	      row = writeSheet.getRow(3);
 	      cell = row.createCell(5);
 	      cell.setCellStyle(cellStyle_Base);

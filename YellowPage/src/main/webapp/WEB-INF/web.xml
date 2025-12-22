@@ -28,9 +28,6 @@
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
-		<multipart-config>
-			<location />
-		</multipart-config>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Dispatcher</servlet-name>
@@ -56,7 +53,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>httpMethodFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 
 	<filter>
