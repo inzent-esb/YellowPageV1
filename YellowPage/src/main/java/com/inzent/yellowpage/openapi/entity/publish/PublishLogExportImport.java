@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.List ;
 
-import javax.servlet.http.HttpServletRequest ;
-import javax.servlet.http.HttpServletResponse ;
+import jakarta.servlet.http.HttpServletRequest ;
+import jakarta.servlet.http.HttpServletResponse ;
 
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.poi.ss.usermodel.Cell;
@@ -148,10 +148,16 @@ public class PublishLogExportImport implements EntityExportImportBean<PublishLog
 		    	  row = writeSheet.createRow(i);
 		    	  
 		    	  int c = 0;
+
+		    	  // 배포일
+		    	  values = null != publishLog.getPk().getPublishDateTime() ? publishLog.getPk().getPublishDateTime().substring(0, 19) : publishLog.getPk().getPublishDateTime();
+		    	  cell = row.createCell(c);
+		    	  cell.setCellStyle(cellStyle_Base);
+		    	  cell.setCellValue(values);
 		    	  
 		    	  // 자원 종류
 		    	  values = String.valueOf(publishLog.getResourceType());
-		    	  cell = row.createCell(c);
+		    	  cell = row.createCell(++c);
 		    	  cell.setCellStyle(cellStyle_Base);
 		    	  cell.setCellValue(values.equals("R") ? MessageGenerator.getMessage("label.modelRecord", "Record") : values.equals("S") ? MessageGenerator.getMessage("label.service", "Service") : values.equals("I") ? MessageGenerator.getMessage("label.interface", "Interface") : "" );
 		    	  		    	  
@@ -162,20 +168,26 @@ public class PublishLogExportImport implements EntityExportImportBean<PublishLog
 		    	  cell.setCellValue(values);
 		    	  writeSheet.addMergedRegion(new CellRangeAddress(i, i, c, ++c));
 		    	  
-		    	  // 상태
+		    	  // 자원 버전
+		    	  values = String.valueOf(publishLog.getResourceVersion());
+		    	  cell = row.createCell(++c);
+		    	  cell.setCellStyle(cellStyle_Base);
+		    	  cell.setCellValue(values);
+		    	  
+		    	  // 배포 상태
 		    	  values = String.valueOf(publishLog.getPublishStatus());
 		    	  cell = row.createCell(++c);
 		    	  cell.setCellStyle(cellStyle_Base);
 		    	  cell.setCellValue(values.equals("A") ? MessageGenerator.getMessage("label.publishLog.status.active", "Active") : values.equals("D") ? MessageGenerator.getMessage("label.publishLog.status.done", "Done") : values.equals("F") ? MessageGenerator.getMessage("label.publishLog.status.fail", "Fail") : "");
 		    	  
-		    	  // 배포자
-		    	  values = publishLog.getPublishUserId();
+		    	  // 메시지
+		    	  values = publishLog.getPublishMessage();
 		    	  cell = row.createCell(++c);
 		    	  cell.setCellStyle(cellStyle_Base);
 		    	  cell.setCellValue(values);
 		    	  
-		    	  // 메시지
-		    	  values = publishLog.getPublishMessage();
+		    	  // 배포자
+		    	  values = publishLog.getPublishUserId();
 		    	  cell = row.createCell(++c);
 		    	  cell.setCellStyle(cellStyle_Base);
 		    	  cell.setCellValue(values);

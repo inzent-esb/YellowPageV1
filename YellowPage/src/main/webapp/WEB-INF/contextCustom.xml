@@ -36,14 +36,38 @@
 		<security:authentication-provider ref="authenticationProvider" />
 	</security:authentication-manager>
 
-	<bean id="tokenRepository" class="com.inzent.imanager.token.TokenRepository">
+	<bean id="tokenRepository" class="com.inzent.imanager.openapi.auth.TokenRepository">
 		<property name="compressionCodec">
 			<bean class="io.jsonwebtoken.impl.compression.GzipCompressionCodec" />
 		</property>
 	</bean>
+	
+	<bean id="corsSource" class="org.springframework.web.cors.UrlBasedCorsConfigurationSource">
+        <property name="corsConfigurations">
+            <map>
+                <entry key="/**">
+                    <bean class="org.springframework.web.cors.CorsConfiguration">
+                        <property name="allowCredentials" value="true" />
+                        <property name="allowedHeaders" value="*" />
+                        <property name="allowedMethods" value="*" />
+                        <property name="allowedOrigins" value="http://localhost:1112" />
+                        <property name="exposedHeaders">
+                            <list>
+                                <value>X-iManager-Access</value>
+                                <value>X-iManager-Refresh</value>
+                            </list>
+                        </property>
+                        <property name="maxAge" value="86400" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>   	
 
 	<security:http auto-config="false" entry-point-ref="accessDeniedHandler" security-context-repository-ref="tokenRepository">
 		<security:intercept-url pattern="/api/auth/token" access="permitAll()" />
+		<security:intercept-url pattern="/api/auth/validateToken" access="permitAll()" />
+		<security:intercept-url pattern="/api/entity/fieldMeta/group/search" access="isAuthenticated()" />
 		<security:intercept-url pattern="/api/entity/fieldMeta/**" access="hasRole('ROLE_RecordViewer')" />
 		<security:intercept-url pattern="/api/entity/interface/**" access="hasRole('ROLE_InterfaceViewer')" />
 		<security:intercept-url pattern="/api/entity/interfaceClass/search" access="isAuthenticated()"/>
@@ -78,11 +102,13 @@
 		<security:intercept-url pattern="/api/page/logoFileName" access="permitAll()" />
 		<security:intercept-url pattern="/api/page/password" access="permitAll()" />
 		<security:intercept-url pattern="/api/page/title" access="permitAll()" />
+		<security:intercept-url pattern="/api/page/messages" access="permitAll()" />
+		<security:intercept-url pattern="/api/page/isCombineLogin" access="permitAll()" />
 		<security:intercept-url pattern="/api/page/**" access="isAuthenticated()" />
 		<security:intercept-url pattern="/api/statistics/server" access="isAuthenticated()"/>
 		<security:intercept-url pattern="/api/statistics/**" access="hasRole('ROLE_StatisticsViewer')" />
-
 		<security:access-denied-handler ref="accessDeniedHandler" />
+		<security:cors configuration-source-ref="corsSource" />
 		<security:csrf disabled="true" />
 	</security:http>
 </beans>
